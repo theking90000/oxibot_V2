@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "module": "commonjs",
+      "jsx":"react",
+      "watch": true,
+      "target": "ES6",
+      "lib" : ["ES6", "DOM"],
+      "outDir": "./dist/server",
+      "skipLibCheck": true
+    },
+    "include": [
+        "./src/server/*.ts",
+        "./src/server/**/*.ts"
+    ]
+  }
+  
