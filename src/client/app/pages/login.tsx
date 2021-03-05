@@ -31,7 +31,7 @@ export default function Login(props){
         <div>
         <Container >
             <Typography variant="h2" align="center"  color="primary" >
-            Veuillez vous connectez
+            Veuillez vous connecter
             </Typography>
             <Box justifyContent="center" display="flex" >
             <Button onClick={handleClick} >

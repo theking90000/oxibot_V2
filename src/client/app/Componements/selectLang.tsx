@@ -4,14 +4,10 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { connect } from 'react-redux'
 import { store } from "../app";
-import { ACTIONS } from "../../reducers/ChangeGuild"
+import { AvailableRessources } from "../../i18n"
 import { useTranslation } from 'react-i18next';
 
-const ServersNames = store => {
-  return { servers : store.SyncData.guilds,currServ : store.ChangeGuild.guild }
-}
-
-const SelectServer = (props) => {
+export default props => {
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -23,16 +19,18 @@ const SelectServer = (props) => {
       setAnchorEl(null);
     };
 
+    const HandleChangeL = (value : string) => {
+        if(value === i18n.language) return handleClose()
+        window.localStorage.setItem('oxibotV2_default_locales', value);
+        window.location.reload()
+    }
+
     const { t, i18n } = useTranslation();
     
     return (
         <div>
             <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-            {
-            props.currServ.id === "" ? 
-            t('SelectServer') : 
-            props.servers.find(c => c.id === props.currServ.id).name
-            }
+         {t('SelectLanguage', {currentlang : t('name')})}
       </Button>
       <Menu
         id="simple-menu"
@@ -41,19 +39,12 @@ const SelectServer = (props) => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        {props.servers.map((value,index) => (
-          <MenuItem key={index} onClick={() => {handleClose();
-            store.dispatch({ type : ACTIONS.SET_CURRENT_GUILD, payload : {id :value.id,url : store.getState().router.location.pathname }})
-          }} >{t("ServerDisplayName",{servername : value.name})}</MenuItem>
-        ))}
-        {props.servers.length === 0 && 
-          <MenuItem onClick={handleClose} >
-           {t("NoServerAvailable")}
+        {AvailableRessources && AvailableRessources.sort(c => (c.lang === i18n.language ? -1 : 1)) && AvailableRessources.map((value,index) => (
+            <MenuItem onClick={() => HandleChangeL(value.lang)} key={index} >
+                {value.langname}
             </MenuItem>
-        }
+        ))}
       </Menu>
     </div>
     )
 }
-
-export default connect(ServersNames)(SelectServer)

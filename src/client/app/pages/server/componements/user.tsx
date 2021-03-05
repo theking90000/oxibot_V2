@@ -11,6 +11,8 @@ import Selector from "./Selector"
 import { store } from "../../../app";
 import { update_user_group } from "../../../../reducers/SyncData"
 import { getPermission, hasPermission } from "../../../../helper/permission";
+import { useTranslation } from 'react-i18next';
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -72,8 +74,10 @@ export default function UserC(props : { perms: string[],pseudo? : string,name : 
             }))
         }
       }
+      const {t, i18n} = useTranslation()
 
-      const name = props.pseudo ? props.pseudo + ` (${props.name})` : props.name
+      const name = props.pseudo ? t('UserFormatListNickName', { tag : props.name, nickname : props.pseudo}) : t("UserFormatList", {  tag : props.name})
+
 
 return (
     <ListItem  >

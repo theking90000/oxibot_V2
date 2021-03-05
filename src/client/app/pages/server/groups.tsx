@@ -17,6 +17,8 @@ import EditGroup from "./editGroup";
 import { createMatchSelector } from 'connected-react-router';
 import Typography from "@material-ui/core/Typography";
 import { ACTIONS } from "../../../reducers/ChangeGuild";
+import { useTranslation } from 'react-i18next';
+
 
 const StoreHandler = storex => {
 
@@ -46,11 +48,11 @@ const GroupsPage = props => {
 
     const [fade,setFade] = React.useState(false)
  
-    let path = ""
+  
 
     React.useEffect(() => {
         setFade(true)
-        if(!props.error) path = `/guild/${props.guild.id}/groups`
+        
        return () => setFade(false)
     }, [])
 
@@ -69,15 +71,18 @@ const GroupsPage = props => {
         <div>ERROR</div>
       )
     }
-    
+
+    const {t,i18n} = useTranslation()
+    const path = !props.error ? `/guild/${props.guild.id}/groups` : ""
+
     return(
         <div>
           <Switch>
           <Route path={`/guild/:serverid/groups/edit/:groupname`}>
             <Fade in={fade} >
               <React.Fragment>
-                <Typography variant="h2" >Modifier le groupe {props.params.params.groupname}</Typography>
-                <EditGroup  group={props.params.groupname} />
+                <Typography variant="h2" >{t('EditGroupTitle',{groupname : props.params.params.groupname})} </Typography>
+                <EditGroup  group={props.params.params.groupname} />
               </React.Fragment>
             </Fade>
             </Route>

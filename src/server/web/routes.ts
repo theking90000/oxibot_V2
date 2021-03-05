@@ -1,6 +1,7 @@
 import { join } from "path"
 import { Express } from "express"
 import router from "./api/routes"
+import * as Lang from "../cache/lang"
 
 export default function (app : Express){
 
@@ -10,6 +11,19 @@ export default function (app : Express){
         res.sendFile('bundle.js', { root : join(__dirname, '..','..','client'),}, (err) => {
 
         })
+    })
+
+    app.get('/locales/:lang.json', async (req,res,next) => {
+         
+        if(Lang.LangExist(req.params.lang)){
+            const l = Lang.GetLang(req.params.lang);
+            l.web.name = l.name
+            res.status(200).json({name : l.name,translates : l.web})
+        }else{
+            return res.status(404).json({success : false});
+        }
+        
+        
     })
 
     app.get("*", (req,res,next) =>{

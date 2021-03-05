@@ -10,31 +10,36 @@ import { Switch, Route} from "react-router-dom";
 import UserPage from "./users"
 import GroupPage from "./groups"
 import ContactsIcon from '@material-ui/icons/Contacts';
+import { ACTIONS } from "../../../reducers/ChangeGuild";
+import { useTranslation } from 'react-i18next';
 
 const handleData = (store) => {
     return store.SyncData.guilds.find(c => c.id === store.ChangeGuild.guild.id) || { noGuild : true }
 }
 
-const pages = [{
-    name : "Aperçu",
-    permission : "panel.guild.see",
-    url : `/`,
-    icon : <DashboardIcon />
-},{
-    name : "Utilisateurs",
-    permission : "panel.users.see",
-    url : `/users`,
-    icon : <PeopleIcon />
-},
-{
-    name : "Groupes",
-    permission : "panel.groups.see",
-    url : `/groups`,
-    icon : <ContactsIcon />
-}]
+
 
 const MainPageServer = props => {
 
+    const { t, i18n } = useTranslation();
+
+    const pages = [{
+    name : t('ServerPreview'),
+    permission : "panel.guild.see",
+    url : `/`,
+    icon : <DashboardIcon />
+    },{
+    name : t('UserList'),
+    permission : "panel.users.see",
+    url : `/users`,
+    icon : <PeopleIcon />
+    },
+    {
+    name : t('GroupsList'),
+    permission : "panel.groups.see",
+    url : `/groups`,
+    icon : <ContactsIcon />
+    }]
     
     if(!props.noGuild){
        
@@ -74,7 +79,9 @@ const MainPageServer = props => {
         </div>
     )
         }
+        store.dispatch({type : ACTIONS.SET_GUILD_NONE})
     return null
+   
 }
 
 export default connect(handleData)(MainPageServer)

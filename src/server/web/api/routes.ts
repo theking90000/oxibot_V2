@@ -6,6 +6,8 @@ import { randomBytes } from "crypto"
 import * as bodyParser from "body-parser";
 import { addUserWeb,selectUser } from "../../cache/userweb"
 import userRouter from "./user"
+import { defaultlocale } from "../../../../config"
+import { getAllLang } from "../../cache/lang"
 
 const router = express.Router();
 
@@ -24,7 +26,7 @@ router.use(bodyParser.json())
       console.log(useri)
       if(!useri) return res.status(400).json({success : false})
 
-      const token = randomBytes(64).toString('base64')
+      const token = randomBytes(256).toString('base64')
 
       try{
         let user = await addUserWeb({
@@ -71,7 +73,7 @@ router.use(bodyParser.json())
         const user = selectUser(req.headers.authorization);
         if(!user) return res.status(401).json({success : false})
 
-        return res.status(200).json({success: true, data : await syncFormat(user)})
+        return res.status(200).json({success: true,defaultlocale,availableslang : getAllLang() , data : await syncFormat(user)})
       }catch{
         return res.status(401).json({success : false})
       }

@@ -20,6 +20,8 @@ import Button from "@material-ui/core/Button"
 import { store } from '../app';
 import { push } from "connected-react-router"
 import {ACTIONS} from "../../reducers/ChangeGuild"
+import { useTranslation } from 'react-i18next';
+import SelectLang from './selectLang';
 
 const drawerWidth = 240;
 
@@ -89,6 +91,10 @@ const useStyles = makeStyles((theme: Theme) =>
       }),
       marginLeft: 0,
     },
+    Selectors : {
+      display : "flex",
+      flexDirection : "row-reverse"
+    }
   }),
 );
 
@@ -135,7 +141,8 @@ export default function PersistentDrawerLeft(props : {
     setOpen(false);
   };
 
-
+  const { t, i18n } = useTranslation();
+  console.log(t('MainTitle'))
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -160,10 +167,13 @@ export default function PersistentDrawerLeft(props : {
             <MenuIcon />
           </IconButton>}
           <Typography variant="h6" noWrap>
-           {props.name || "Accueil"}
+           {props.name || t("MainTitle")}
           </Typography>
           <Typography className={classes.c} variant="h6" noWrap>
+            <div className={classes.Selectors} >
           <SelectServer />
+          <SelectLang />
+          </div>
           </Typography>
         </Toolbar>
       </AppBar>
@@ -178,7 +188,7 @@ export default function PersistentDrawerLeft(props : {
       >
         <div className={classes.drawerHeader}>
           <Button onClick={() => store.dispatch({type : ACTIONS.SET_GUILD_NONE})} style={{marginRight : "auto"}} >
-            Retour
+            {t('Back')}
           </Button>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}

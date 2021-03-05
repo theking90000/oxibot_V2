@@ -7,6 +7,8 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper"
 import { store } from "../../../app";
 import { push } from "connected-react-router";
+import { useTranslation } from 'react-i18next';
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,16 +31,18 @@ export default (props : { name : string,path : string }) => {
         store.dispatch(push(props.path + `/edit/${props.name}`))
     }
 
+    const {t, i18n} = useTranslation()
+
     return(
         <ListItem >
             <Paper className={classes.box} >
                 <Box>
                     <Typography>
-                    {props.name}
+                    {t('GroupFormatList',{groupname : props.name})}
                     </Typography>
                 </Box>
                 <Box>
-                    <Button onClick={HandleClick} >Modifier</Button>
+                    <Button onClick={HandleClick} >{t('GroupListEdit')}</Button>
                 </Box>
             </Paper>
         </ListItem>

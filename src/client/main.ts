@@ -1,6 +1,7 @@
 import { store } from "./app/app"
 import { push, replace } from 'connected-react-router'
 import { ACTIONS } from "./reducers/SyncData"
+import { setup } from "./i18n"
 
 declare const window : any
 
@@ -27,8 +28,6 @@ export default async function start(){
         const res = await x.json()
         if(res.success){
         window.localStorage.oxibotV2_token = res.token
-         
-          
         }else{
             return store.dispatch(replace('/login')); 
         }
@@ -47,8 +46,8 @@ export default async function start(){
 
         const json = await request.json();
         if(json.success){
+        await setup(json.defaultlocale, json.availableslang);
         store.dispatch(({ type : ACTIONS.REPLACE_DATA, payload : json.data }))
-        
         store.dispatch(replace('/'))
         }else{
             store.dispatch(replace('/login'));

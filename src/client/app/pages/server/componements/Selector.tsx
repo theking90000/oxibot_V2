@@ -10,6 +10,9 @@ import List from '@material-ui/core/List';
 import ListItem, { ListItemProps } from '@material-ui/core/ListItem';
 import TextField from '@material-ui/core/TextField';
 import { constant } from "lodash";
+import { useTranslation } from 'react-i18next';
+
+
 
 type val = {
     name : string,
@@ -105,6 +108,7 @@ export default function Selector(props :
           setDisplayEd(d)
 
         }
+        const { t, i18n } = useTranslation();
 
             return(
                 <div>
@@ -146,7 +150,7 @@ export default function Selector(props :
                                     <div>
                                     <TextField 
                                     autoFocus
-                                    label={availables[0] ? "Rechercher" : "Aucun élément"} 
+                                    label={availables[0] ? t('SelectorSearch') : t('SelectorSearchNoMatch')} 
                                     onChange={handleSearch}
                                     disabled={!availables[0]} />
                                     </div>

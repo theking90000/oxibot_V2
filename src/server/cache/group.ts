@@ -47,6 +47,24 @@ export const createGroup = async (g_ : createGroupT) => {
     }
 }
 
+export const removeGroup = async (g_ : {name : string , guildID : string}) => {
+    if(g_.name === "admin") return;
+
+    const groups_ = getGroups(g_.guildID)
+
+    const group = groups_.find(c => c.name === g_.name)
+
+    if(!group)  throw new Error("Not Exists")
+
+   if(await group.delete()){
+
+    groups_.splice(groups_.indexOf(group),1)
+    groups.set(group.guildID, groups_)
+
+   }
+
+}
+
 
 updateCache();
 

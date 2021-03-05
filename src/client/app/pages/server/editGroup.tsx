@@ -5,7 +5,7 @@ import { store } from "../../app"
 import { connect } from "react-redux";
 import { replace, } from "connected-react-router";
 import { ACTIONS } from "../../../reducers/ChangeGuild";
-
+import { useTranslation } from "react-i18next"
 
 
 const elem = (props : { group : string }) => {
@@ -14,7 +14,9 @@ const elem = (props : { group : string }) => {
     console.log(props)
     
     return (
-        <Grid container >{props.group}</Grid>
+        <Grid container >
+            TODO
+        </Grid>
     )
 }
 

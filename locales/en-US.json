@@ -1,0 +1,15 @@
+{
+    "name" : "English",
+    "web" : {
+        "MainTitle" : "Welcome -- OXIBOT",
+        "Back" : "Back",
+        "SelectServer" : "Select a server",
+        "ServerDisplayName" : "{{servername}}",
+        "NoServerAvailable" : "No servers available !",
+        "ServerPreview" : "Preview",
+        "UserList" : "Users",
+        "GroupsList" : "Groups",
+        "SearchUserPlaceholder" : "Search an user ({{counter}})",
+        "SelectLanguage" : "Langage"
+    }
+}

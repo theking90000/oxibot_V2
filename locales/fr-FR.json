@@ -1,0 +1,22 @@
+{
+    "name" : "français",
+    "web" : {
+        "MainTitle" : "Accueil",
+        "Back" : "Retour",
+        "SelectServer" : "Choisir un serveur",
+        "ServerDisplayName" : "{{servername}}",
+        "NoServerAvailable" : "Aucun serveur disponible !",
+        "ServerPreview" : "Aperçu",
+        "UserList" : "Utilisateurs",
+        "GroupsList" : "Groupes",
+        "SearchUserPlaceholder" : "Rechercher un utilisateur ({{counter}})",
+        "SelectLanguage" : "Langue ({{currentlang}})",
+        "SelectorSearch" : "Rechercher un élément",
+        "SelectorSearchNoMatch" : "Aucun élément",
+        "UserFormatList": "{{tag}}",
+        "UserFormatListNickName" :  "{{tag}} ({{nickname}})",
+        "GroupFormatList" : "{{groupname}}",
+        "GroupListEdit" : "Modifier",
+        "EditGroupTitle" : "Modifier le groupe {{groupname}}"
+    }
+}

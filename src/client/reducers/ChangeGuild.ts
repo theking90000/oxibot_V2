@@ -1,5 +1,5 @@
 import { store } from "../app/app";
-import { push } from 'connected-react-router'
+import { push , replace} from 'connected-react-router'
 import { generatePath } from 'react-router';
 import { useParams } from "react-router-dom"
 
@@ -33,7 +33,7 @@ export default function ChangeGuild(state = SyncManager_initialState, action) {
       case ACTIONS.SET_GUILD_NONE : {
 
         setTimeout(() => { 
-          store.dispatch(push('/'))
+          store.dispatch(replace('/'))
         })
         state = SyncManager_initialState;
         return state;

@@ -8,6 +8,8 @@ import List from '@material-ui/core/List';
 import Fade from '@material-ui/core/Fade';
 import { getPermission } from "../../../helper/permission"
 import TextField from '@material-ui/core/TextField';
+import { useTranslation } from 'react-i18next';
+
 
 const StoreHandler = store => {
 
@@ -82,12 +84,14 @@ const UserPage = props => {
         SetDisplay(props.members.users)
     }, [props.members.users])
 
+    const { t, i18n } = useTranslation();
+
     return(
         <div className={classes.root}>
             <Fade in={fade} >
             <div className={classes.elem}>
             <div >
-                <TextField autoFocus label="Rechercher" onChange={handleSearch} className={classes.search} />
+                <TextField autoFocus label={t("SearchUserPlaceholder", {counter : display.length})} onChange={handleSearch} className={classes.search} />
             </div>
             <div className={classes.parentList}>
                 <List className={classes.list}>
