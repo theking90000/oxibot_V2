@@ -37,7 +37,7 @@ router.use(bodyParser.json())
         if(req.body.action){
             switch(req.body.action){
                 case "ADD" : {
-                    if(req.body.group){
+                    if(req.body.group && req.user.guilds.get(req.guild).permission.hasPermission("panel.groups.addgroup")){
                         const groups = getGroups(req.guild)
                         const ugroups = req.user_a.getGroups()
                         if(!ugroups.find(c => c.name === req.body.group)){
@@ -55,7 +55,7 @@ router.use(bodyParser.json())
                    
                 }
                 case "REMOVE" : {
-                    if(req.body.group){
+                    if(req.body.group && req.user.guilds.get(req.guild).permission.hasPermission("panel.groups.removegroup")){
                         const groups = getGroups(req.guild)
                         const ugroups = req.user_a.getGroups()
                         if(ugroups.find(c => c.name === req.body.group)){

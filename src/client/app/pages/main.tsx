@@ -10,10 +10,9 @@ const syncDataToProps = store => {
 class MainPage extends React.Component {
     render() {
         return (
-           <AppBar drawer={false} >
-            SALTU
+           <AppBar drawer={false} >   
             <div>
-                cla
+                
             </div>
             </AppBar> 
         )

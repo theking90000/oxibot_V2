@@ -6,23 +6,31 @@ import PeopleIcon from '@material-ui/icons/People';
 import { connect } from 'react-redux'
 import AppBar from "../../Componements/appBar"
 import { getPermission , hasPermission} from "../../../helper/permission"
-import { Switch, Route,} from "react-router-dom";
+import { Switch, Route} from "react-router-dom";
 import UserPage from "./users"
+import GroupPage from "./groups"
+import ContactsIcon from '@material-ui/icons/Contacts';
 
 const handleData = (store) => {
     return store.SyncData.guilds.find(c => c.id === store.ChangeGuild.guild.id) || { noGuild : true }
 }
 
 const pages = [{
-    name : "dashboard",
+    name : "Aperçu",
     permission : "panel.guild.see",
     url : `/`,
     icon : <DashboardIcon />
 },{
-    name : "users",
+    name : "Utilisateurs",
     permission : "panel.users.see",
     url : `/users`,
     icon : <PeopleIcon />
+},
+{
+    name : "Groupes",
+    permission : "panel.groups.see",
+    url : `/groups`,
+    icon : <ContactsIcon />
 }]
 
 const MainPageServer = props => {
@@ -52,11 +60,16 @@ const MainPageServer = props => {
                     icon : c.icon
                 }
             })} >
+            
             <Switch >
                 <Route path="/guild/:serverid/users">
                     {hasPermission("panel.users.see",perms) && <UserPage />}
                 </Route>
+                <Route path="/guild/:serverid/groups*">
+                    {hasPermission("panel.groups.see",perms) && <GroupPage />}
+                </Route>
             </Switch>
+            
             </AppBar>
         </div>
     )

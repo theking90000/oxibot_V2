@@ -50,7 +50,7 @@ export default function App() {
             <Login />
           </Route>
 
-          <Route path="/guild/:serverid/">
+          <Route path="/guild/:serverid/*">
            <MainServerPage />
           </Route>
 

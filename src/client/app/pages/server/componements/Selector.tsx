@@ -37,8 +37,10 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems : "center",
     },
     List : {
-      width : "90%",
-      overflowY : 'auto'
+      width : "100%",
+      fontSize : theme.typography.h6.fontSize,
+      overflowY : 'auto',
+      cursor : "pointer",
     },
     ListItem : {
       background : theme.palette.background.default
@@ -51,6 +53,8 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function Selector(props : 
     { 
         selected : val[],
+        canAdd? : boolean,
+        canRemove? : boolean,
         availables : val[]
         onChange : (type : 'ADD' | 'REMOVE', value : val ) => void;
         }) {
@@ -107,16 +111,20 @@ export default function Selector(props :
                    <Box component="ul" className={classes.root}>
                     {selected.map((value,index) => (
                       <li key={index}>
-                      <Chip
+                      {props.canRemove && <Chip
                         label={value.name}
                         onDelete={()=>handleDelete(value)}
                         className={classes.chip}
-                      />
+                      />}
+                      {!props.canRemove && <Chip
+                        label={value.name}   
+                        className={classes.chip}
+                      />}
                     </li>  
                     ))}
                     
-                      <li >
-                      <Chip 
+                    {props.canAdd &&<li >
+                       <Chip 
                           label={<AddCircleOutlineIcon />}
                           className={classes.chip}
                           onClick={handleClick}
@@ -131,9 +139,13 @@ export default function Selector(props :
                       >
                         {({ TransitionProps }) => (
                           <ClickAwayListener onClickAway={handleClickAway}>
-                            <Paper className={classes.selector}>
+                            <Paper 
+                            elevation={3}
+                            className={classes.selector}
+                            >
                                     <div>
                                     <TextField 
+                                    autoFocus
                                     label={availables[0] ? "Rechercher" : "Aucun élément"} 
                                     onChange={handleSearch}
                                     disabled={!availables[0]} />
@@ -154,7 +166,7 @@ export default function Selector(props :
                         )}
                           </Popper>
                           </React.Fragment>
-                      </li>
+                      </li>}
                     </Box>
                 </div>            
             )

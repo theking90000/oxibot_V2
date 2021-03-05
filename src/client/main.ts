@@ -7,6 +7,7 @@ declare const window : any
 
 export default async function start(){
 
+    const backurl = store.getState().router.location
 
     if(store.getState().SyncData.userinfo.id) return store.dispatch(push('/'));
 
@@ -47,7 +48,7 @@ export default async function start(){
         const json = await request.json();
         if(json.success){
         store.dispatch(({ type : ACTIONS.REPLACE_DATA, payload : json.data }))
-
+        
         store.dispatch(replace('/'))
         }else{
             store.dispatch(replace('/login'));
