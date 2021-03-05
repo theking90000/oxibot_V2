@@ -17,6 +17,8 @@
         "UserFormatListNickName" :  "{{tag}} ({{nickname}})",
         "GroupFormatList" : "{{groupname}}",
         "GroupListEdit" : "Modifier",
-        "EditGroupTitle" : "Modifier le groupe {{groupname}}"
+        "EditGroupTitle" : "Modifier le groupe {{groupname}}",
+        "EditGroupPermission" : "Permissions ({{counter}})",
+        "SearchGroupPermissionPlaceholder" : "Rechercher des permission ({{counter}})"
     }
 }

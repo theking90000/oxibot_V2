@@ -82,7 +82,7 @@ const GroupsPage = props => {
             <Fade in={fade} >
               <React.Fragment>
                 <Typography variant="h2" >{t('EditGroupTitle',{groupname : props.params.params.groupname})} </Typography>
-                <EditGroup  group={props.params.params.groupname} />
+                <EditGroup  {...props} group={props.params.params.groupname} /*group={props.params.params.groupname}*/ />
               </React.Fragment>
             </Fade>
             </Route>
