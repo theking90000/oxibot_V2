@@ -29,15 +29,17 @@ export const getUser = (u : { guildID : string,userID : string }) : permissionus
             let ok = false;
             let c = arg0.split('.');
             for(const perm of permissions){
-                let p = perm.split('.'),b=true
+                let p = perm.split('.'),b=true,counter = 0;
                 for(var i=0;i<c.length;i++){
                     if((p[i] && c[i] === p[i] || p[i] === "*")){
-                        b = true;          
+                        counter++
+                         b = true;         
                     }
                     else if (!p[i]){
                         let c_ = false;
                         for(var x=0;x<c.length;x++){
                             if (!c_ && (!p[i] && (p[i-x] && p[i-x] === '*') )){
+                                counter = p.length
                                 c_ = true,b = true;
                             }else if (!c_){
                                 b = false;
@@ -46,7 +48,7 @@ export const getUser = (u : { guildID : string,userID : string }) : permissionus
                     }
                     else b = false;
                 }
-                if(b) ok = true
+                if(b && counter === p.length) ok = true
             }
 
             return ok;
@@ -56,4 +58,9 @@ export const getUser = (u : { guildID : string,userID : string }) : permissionus
 
     return c;
 
+}
+
+export const PERMISSIONS = {
+    "command.group" : "PermissionCommandGroup",
+    "command.group.permission" : "PermissionCommandGroupPerm"
 }

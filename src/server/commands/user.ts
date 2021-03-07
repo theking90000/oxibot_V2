@@ -28,7 +28,7 @@ const command : commandType = {
                 
 
         }
-        if(message.args.length === 2 && message.args[1] === "info" && message.userPerm.hasPermission('command.user')){
+        if(message.args.length === 2 && message.args[1] === "info" && message.userPerm.hasPermission('command.user.info')){
 
             let user = message.mentions.users.first();
             if(user){
@@ -52,7 +52,7 @@ const command : commandType = {
         }
         else if(message.args.length === 3 && getGroups(message.guild.id).map(c => c.name).includes(message.args[2]) &&
         message.args[1] === "addgroup"  &&  
-             message.userPerm.hasPermission('command.user.addgroup')){
+             message.userPerm.hasPermission('command.user.group.add')){
                 let user = message.mentions.users.first();
 
                 if(user) {
@@ -89,7 +89,7 @@ const command : commandType = {
             }
             else if(message.args.length === 3 && getGroups(message.guild.id).map(c => c.name).includes(message.args[2]) &&
         message.args[1] === "removegroup"  &&  
-             message.userPerm.hasPermission('command.user.removegroup')){
+             message.userPerm.hasPermission('command.user.group.remove')){
                 let user = message.mentions.users.first();
 
                 if(user) {

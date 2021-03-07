@@ -89,8 +89,8 @@ return (
                 </div>
                 <Selector 
                 selected={props.groups} 
-                canAdd={hasPermission("panel.groups.addgroup",props.perms)}
-                canRemove={hasPermission("panel.groups.removegroup",props.perms)}
+                canAdd={hasPermission("panel.groups.permission.add",props.perms)}
+                canRemove={hasPermission("panel.groups.permission.delete",props.perms)}
                 availables={props.availablegroups} 
                 onChange={handleChange}  
                 />

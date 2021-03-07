@@ -2,6 +2,7 @@ import { store } from "./app/app"
 import { push, replace } from 'connected-react-router'
 import { ACTIONS } from "./reducers/SyncData"
 import { setup } from "./i18n"
+import { setPermissionList } from "./reducers/Docs"
 
 declare const window : any
 
@@ -47,6 +48,12 @@ export default async function start(){
         const json = await request.json();
         if(json.success){
         await setup(json.defaultlocale, json.availableslang);
+
+        const reqs = await fetch('/api/doc/permissions');
+        const reqsj = await reqs.json();
+        
+        setPermissionList(reqsj);
+
         store.dispatch(({ type : ACTIONS.REPLACE_DATA, payload : json.data }))
         store.dispatch(replace('/'))
         }else{

@@ -18,7 +18,8 @@ export default function (app : Express){
         if(Lang.LangExist(req.params.lang)){
             const l = Lang.GetLang(req.params.lang);
             l.web.name = l.name
-            res.status(200).json({name : l.name,translates : l.web})
+            const t = {...l.web,doc : {permissions : l.doc.permission} }
+            res.status(200).json({name : l.name,translates : t})
         }else{
             return res.status(404).json({success : false});
         }

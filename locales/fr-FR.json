@@ -18,7 +18,23 @@
         "GroupFormatList" : "{{groupname}}",
         "GroupListEdit" : "Modifier",
         "EditGroupTitle" : "Modifier le groupe {{groupname}}",
+        "GroupListNoGroup" : "Il n'y a pas de groupes :(",
+        "CreateGroupTitle" : "Créer un groupe",
+        "CreateGroupNamePlaceholder" : "Nom du groupe",
+        "CreateGroupErrorNamePlaceholder" : "Nom incorrect",
+        "CreateGroupButton" : "Créer",
+        "DeleteGroupButton" : "Supprimer",
         "EditGroupPermission" : "Permissions ({{counter}})",
-        "SearchGroupPermissionPlaceholder" : "Rechercher des permission ({{counter}})"
+        "SearchGroupPermissionPlaceholder" : "Rechercher des permission ({{counter}})",
+        "EditGroupPermissionDisplay" : "{{permission}}",
+        "EditGroupAddPermissionPlaceholder" : "Ajouter une permission",
+        "EditGroupAddPermissionLabel" : "Rechercher une permission",
+        "EditGroupAddPermissionButton" : "Ajouter"
+    },
+    "doc" : {
+        "permission" : {
+            "PermissionCommandGroup" : "{{perm}}\nDonne l'accès a la commandes des groupes",
+            "PermissionCommandGroupPerm" : "{{perm}}\nDonne l'accès a la commande pour ajouter\nDes permission a un groupe"
+        }
     }
 }

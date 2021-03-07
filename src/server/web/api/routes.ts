@@ -3,15 +3,19 @@ import { checkToken } from "./discord"
 import auth from "./format/auth"
 import syncFormat from "./helper/sync"
 import { randomBytes } from "crypto"
-import * as bodyParser from "body-parser";
+import { urlencoded, json}from "body-parser";
 import { addUserWeb,selectUser } from "../../cache/userweb"
 import userRouter from "./user"
+import GroupRouter from "./group"
+import DocRouter from "./doc"
 import { defaultlocale } from "../../../../config"
 import { getAllLang } from "../../cache/lang"
 
 const router = express.Router();
 
-router.use(bodyParser.json())
+router.use(urlencoded({extended: true}));
+router.use(json())
+
 
   /**
    * @name /auth
@@ -48,6 +52,16 @@ router.use(bodyParser.json())
   })
 
   /**
+     * @name /doc/*
+     * 
+     */
+   router.use('/doc',DocRouter)
+
+   router.get('/test',(req,res,next) => {
+     res.send('eaz')
+   })
+
+  /**
    * @name /sync
    * 
    */
@@ -63,7 +77,8 @@ router.use(bodyParser.json())
       }catch{
         return res.status(401).json({success : false})
       }
-    }
+    }else
+    return res.status(401).json({ success : false})
   })
 
    router.get('/sync' , async (req,res,next)  => {
@@ -80,6 +95,8 @@ router.use(bodyParser.json())
       
 
 
+    }else{
+      return res.status(401).json({success : false})
     }
 
    })
@@ -90,5 +107,12 @@ router.use(bodyParser.json())
     */
 
     router.use('/user', userRouter)
+
+    /**
+     * @name /group/*
+     */
+    router.use('/group', GroupRouter)
+
+    
 
 export default router;

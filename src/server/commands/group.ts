@@ -32,7 +32,7 @@ const command : commandType = {
                 let em = embed({name : "Liste des groupes"})
 
                 g.forEach(c => {
-                    em.addFields([{val1 : c.name}])
+                    em.addFields([{val1 : c.name,val2 : `${c.permissions.length} permissions`}])
                 })
 
                 message.channel.send(em.getEmbed());
@@ -60,7 +60,7 @@ const command : commandType = {
             }
             else if(message.args[0] && getGroups(message.guild.id).map(c => c.name).includes(message.args[0]) &&
             message.args[1] && message.args[1] === "adduser" &&  message.args[2] && message.args.length === 3 &&
-             message.userPerm.hasPermission('command.group.adduser')){
+             message.userPerm.hasPermission('command.group.user.add')){
                 let user = message.mentions.users.first();
                 if(user) {
                    let g = getGroups(message.guild.id);

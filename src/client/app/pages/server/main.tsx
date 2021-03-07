@@ -43,7 +43,7 @@ const MainPageServer = props => {
     
     if(!props.noGuild){
        
-    
+    console.log(props)
     const perms = getPermission(props.me.id, props.id)
 
     const links = pages.filter(c => {

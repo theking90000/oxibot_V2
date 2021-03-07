@@ -50,11 +50,11 @@ export default async function (user: ActionUserWeb) : Promise<syncObjD> {
 
     const guilds : Array<syncObjGuild> = [];
 
-
+ 
     
     for(const [id,guild] of user.guilds){
-       
-        if(!user.guilds.get(id).permission.hasPermission('panel.guild.see')) continue;
+        const getUsr = user.guilds.get(id)
+        if(!getUsr.permission.hasPermission('panel.guild.see')) continue;
         
         const guildm : BasicUser[] = [];
        
@@ -68,7 +68,7 @@ export default async function (user: ActionUserWeb) : Promise<syncObjD> {
             G_G.push({name : c.name,permission: c.permissions})
         })
 
-        if(user.guilds.get(id).permission.hasPermission('panel.users.see')){
+        if(getUsr.permission.hasPermission('panel.users.see')){
 
         for(const [id, member] of guild.Guild.members.cache){
 
