@@ -1,4 +1,3 @@
-import { number } from "joi";
 import * as mongoose from "mongoose";
 
 const UserWebSchema : mongoose.Schema = new mongoose.Schema({
@@ -11,13 +10,29 @@ const UserWebSchema : mongoose.Schema = new mongoose.Schema({
         required :true,
     },
     expires : {
-        type : Number,
-        required : true,
-    },
+        type: Number,
+        required: true,
+        validate : (value) => {
+            const date = new Date()
+            if (Math.round((date.getTime() / 1000)) > parseInt(value)) {
+                throw new Error('Token Expired')
+            }
+        }
+        },
     token : {
         type : String,
         required : true,
-    }
+    },
+    serverToAdd : [{
+        name : {
+            type : String,
+            required : true,
+        },
+        id : {
+            type : String,
+            required : true,
+        }
+    }]
 })
 
 export interface IUsersWebDocument extends mongoose.Document{
@@ -25,6 +40,10 @@ export interface IUsersWebDocument extends mongoose.Document{
     token : string,
     expires : number,
     access_token : string,
+    serverToAdd? : {
+        name : string,
+        id : string
+    }[]
 } 
 
 interface UserWebInterface extends IUsersWebDocument {

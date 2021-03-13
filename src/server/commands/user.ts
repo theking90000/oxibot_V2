@@ -12,6 +12,7 @@ const command : commandType = {
 
             message.channel.send(embed({
                 name : "Gérer les utilisateur",
+                guildid : message.guild.id,
                   fields : [{
                           val1 : `${message.prefix}user @user info`,
                           val2 : "Renvoie les informations sur l'utilisateur\n(permission : command.user.info)"
@@ -39,6 +40,7 @@ const command : commandType = {
             })
             message.channel.send(embed({
                 name : `Info de l'utilisateur`,
+                guildid : message.guild.id,
                   fields : [{
                           val1 : `Groupes :`,
                           val2 : x === "" ? "Aucun groupe !" : x
@@ -66,6 +68,7 @@ const command : commandType = {
                         if(ugroup.includes(group.name)){
                             message.channel.send(embed({
                                 name : "Erreur !",
+                                guildid : message.guild.id,
                                 fields : [{
                                     val1 : `Une erreur est survenue`,
                                     val2 : `<@${user.id}> est déja dans le groupe ${group.name}`
@@ -76,6 +79,7 @@ const command : commandType = {
                             us.addGroup(group.name)
                             message.channel.send(embed({
                                 name : "Utilisateur ajouté !",
+                                guildid : message.guild.id,
                                 fields : [{
                                     val1 : `Nouveau membre du groupe ${group.name}`,
                                     val2 : `<@${user.id}> est désormais dans le groupe ${group.name}`
@@ -103,6 +107,7 @@ const command : commandType = {
                         if(!ugroup.includes(group.name)){
                             message.channel.send(embed({
                                 name : "Erreur !",
+                                guildid : message.guild.id,
                                 fields : [{
                                     val1 : `Une erreur est survenue`,
                                     val2 : `<@${user.id}> n'est pas dans le groupe ${group.name}`
@@ -113,6 +118,7 @@ const command : commandType = {
                             us.removeGroup(group.name)
                             message.channel.send(embed({
                                 name : "Utilisateur retiré !",
+                                guildid : message.guild.id,
                                 fields : [{
                                     val1 : `Un membre a quitté le ${group.name}`,
                                     val2 : `<@${user.id}> n'est plus dans le groupe ${group.name}`

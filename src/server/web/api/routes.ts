@@ -4,10 +4,11 @@ import auth from "./format/auth"
 import syncFormat from "./helper/sync"
 import { randomBytes } from "crypto"
 import { urlencoded, json}from "body-parser";
-import { addUserWeb,selectUser } from "../../cache/userweb"
+import { addUserWeb,selectUser,isUserExist,updateUserToken } from "../../cache/userweb"
 import userRouter from "./user"
 import GroupRouter from "./group"
 import DocRouter from "./doc"
+import GuildRouter from "./guild"
 import { defaultlocale } from "../../../../config"
 import { getAllLang } from "../../cache/lang"
 
@@ -32,6 +33,7 @@ router.use(json())
 
       const token = randomBytes(256).toString('base64')
 
+      if(!isUserExist(useri.id)){
       try{
         let user = await addUserWeb({
           userID : useri.id,
@@ -47,6 +49,20 @@ router.use(json())
       }catch{
         return res.status(400).json({success : false})
       }
+    }else{
+      let user = await updateUserToken({
+        userID : useri.id,
+      access_token : req.body.token,
+      expires : req.body.expires_in,
+      token : token,
+      })
+
+      if(user){
+      return  res.status(200).json({success : true,token : token})
+      }
+      return  res.status(400).json({success : false})
+    }
+
     }
     return res.status(400).json({success : false})
   })
@@ -66,10 +82,10 @@ router.use(json())
    * 
    */
 
-  router.use("*", (req,res,next) => {
+  router.use("*", async (req,res,next) => {
     if(req.headers.authorization){
       try{
-        const user = selectUser(req.headers.authorization);
+        const user = await selectUser(req.headers.authorization);
         if(!user) return res.status(401).json({success : false})
 
         req.user = user;
@@ -85,7 +101,7 @@ router.use(json())
 
     if(req.headers.authorization){
       try{
-        const user = selectUser(req.headers.authorization);
+        const user = await selectUser(req.headers.authorization);
         if(!user) return res.status(401).json({success : false})
 
         return res.status(200).json({success: true,defaultlocale,availableslang : getAllLang() , data : await syncFormat(user)})
@@ -113,6 +129,9 @@ router.use(json())
      */
     router.use('/group', GroupRouter)
 
-    
+    /**
+     * @name /guild/*
+     */
+    router.use('/guild', GuildRouter)
 
 export default router;

@@ -1,6 +1,7 @@
 import client from "../index";
 import groups,{getGroups,createGroup}  from "../cache/group";
 import users,{getUsers,addUser, selectUser}  from "../cache/user";
+import * as guildsCache from "../cache/guilds"
 import * as chalk from "chalk"
 import { GuildMember } from "discord.js";
 
@@ -8,10 +9,7 @@ client.on('guildCreate',async (guild) => {
      
     if(!getGroups(guild.id).map(c => c.name).includes('admin')){
         createGroup({ guildID : guild.id,name : "admin",permissions : ['*'] })
-        console.log(chalk.red('Création du role admin pour la guild ' + guild.name))
-
-        
-        
+        console.log(chalk.red('Création du role admin pour la guild ' + guild.name))       
     }
     let users = getUsers(guild.id);
 
@@ -34,7 +32,9 @@ client.on('guildCreate',async (guild) => {
             
         }
         
-        
+        if(!guildsCache.hasGuild(guild.id)){
+            guildsCache.CreateGuild(guildsCache.DefaultGuild(guild.id));
+        }
 
         
 })

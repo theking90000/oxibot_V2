@@ -17,6 +17,7 @@ export default async function Request_Helper(data : {
      if(data.json !== false) headers['Content-Type'] = 'application/json'
      if(data.auth !== false) headers['Authorization'] = window.localStorage.oxibotV2_token
 
+     try{
     const req = await fetch((data.api ? `/api/${data.route}` : data.route),{
           headers,
           body : data.data,
@@ -29,4 +30,8 @@ export default async function Request_Helper(data : {
 
     if(data.response === "blob") return await req.blob()
 
+      }
+      catch{
+            return {success : false}
+      }
 }

@@ -93,6 +93,7 @@ const GroupsPage = props => {
         else SetNameError(false)
         SetNameValue(e.target.value.toLowerCase())
       }
+      if(e.target.value === "") SetNameError(false)
     }
 
     const handleCreateGroup = async (e) => {

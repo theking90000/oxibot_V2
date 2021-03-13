@@ -6,11 +6,11 @@ import { selectUser } from "../cache/user"
 const command : commandType = {
     name : `group`,
 
-    execute : (message) => {
-
+    execute : async (message) => {
             if(!message.args[0] && message.userPerm.hasPermission('command.group')){
                message.channel.send(embed({
                    name : "Gérer les groupes",
+                   guildid : message.guild.id,
                      fields : [{
                              val1 : `${message.prefix}group list`,
                              val2 : "Renvoie la liste des groupes\n(permission : command.group.list)"
@@ -29,7 +29,7 @@ const command : commandType = {
 
                 let g = getGroups(message.guild.id);
 
-                let em = embed({name : "Liste des groupes"})
+                let em = embed({guildid : message.guild.id,name : "Liste des groupes"})
 
                 g.forEach(c => {
                     em.addFields([{val1 : c.name,val2 : `${c.permissions.length} permissions`}])
@@ -41,7 +41,7 @@ const command : commandType = {
             else if(message.args[0] && getGroups(message.guild.id).map(c => c.name).includes(message.args[0]) &&
             message.args[1] && message.args[1] === "permission" && message.userPerm.hasPermission('command.group.permission')){
                 let g = getGroups(message.guild.id);
-                let em = embed({ name : `Permission pour le group ${message.args[0]}` });
+                let em = embed({guildid : message.guild.id,name : `Permission pour le group ${message.args[0]}` });
 
                 let perms = g.find(x => x.name === message.args[0]).permissions
 
@@ -64,7 +64,7 @@ const command : commandType = {
                 let user = message.mentions.users.first();
                 if(user) {
                    let g = getGroups(message.guild.id);
-                   let us = selectUser(message.guild.id,user.id)
+                   let us = await selectUser(message.guild.id,user.id)
                    let ugroup = us.getGroups().map(c => c.name)
                    let group = g.find(x => x.name === message.args[0])
                     console.log(ugroup)
@@ -72,6 +72,7 @@ const command : commandType = {
                         if(ugroup.includes(group.name)){
                             message.channel.send(embed({
                                 name : "Erreur !",
+                                guildid : message.guild.id,
                                 fields : [{
                                     val1 : `Une erreur est survenue`,
                                     val2 : `<@${user.id}> est déja dans le groupe ${group.name}`
@@ -82,6 +83,7 @@ const command : commandType = {
                             us.addGroup(group.name)
                             message.channel.send(embed({
                                 name : "Utilisateur ajouté !",
+                                guildid : message.guild.id,
                                 fields : [{
                                     val1 : `Nouveau membre du groupe ${group.name}`,
                                     val2 : `<@${user.id}> est désormais dans le groupe ${group.name}`

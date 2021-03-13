@@ -10,7 +10,7 @@ const SyncManager_initialState : syncObjD= {
       tag : null,
       username : null,
     },
-    guilds : []
+    guilds : [],
 }
 
 export const update_user_group = (obj : { type : 'REMOVE' | 'ADD', group : string, userID : string,ServerID : string}) => {
@@ -53,12 +53,31 @@ export const DeleteGroup = async (obj : { group : string,ServerID : string }) =>
  return { type : ACTIONS.DELETE_GROUP,payload : obj }
 }
 
+export const update_settings_value = async (payload : { ServerID : string,cat : string,name : string,value : any }) => {
+
+  await Request_Helper({ 
+    data : JSON.stringify({
+    guild : payload.ServerID,
+    cat : payload.cat,
+    name : payload.name,
+    value: payload.value,
+    }),
+    api : true,
+    route : "guild/settings",
+    method : "PUT",
+    response : "json",
+ })
+
+ return {type : ACTIONS.UPDATE_SETTINGS_VALUE , payload}
+}
+
 export const ACTIONS = {
     REPLACE_DATA : "@SyncManager:REPLACE_DATA",
     UPDATE_USER_GROUP : "@SyncManager:UPDATE_USER_GROUP",
     UPDATE_GROUP_PERMISSION : "@SyncManager:UPDATE_GROUP_PERMISSION",
     CREATE_GROUP : "@SyncManager:CREATE_GROUP",
     DELETE_GROUP : "@SyncManager:DELETE_GROUP",
+    UPDATE_SETTINGS_VALUE : "@SyncManager:UPDATE_SETTINGS_VALUE",
 }
 
 export default function SyncManager(state = SyncManager_initialState, action) {
@@ -130,7 +149,23 @@ export default function SyncManager(state = SyncManager_initialState, action) {
         }
         return guild
     })
+    return state
   }
+
+    case ACTIONS.UPDATE_SETTINGS_VALUE : {
+      console.log(action.payload)
+      state.guilds = state.guilds.map(guild => {
+        if(guild.id === action.payload.ServerID){
+          guild.settings = guild.settings.map(setting => {
+            if(setting.name === action.payload.cat && setting.values[action.payload.name] !== undefined){
+              setting.values[action.payload.name] = action.payload.value
+            }
+            return setting;
+          })
+        }
+        return guild
+    })
+    }
       default:
         
         return state

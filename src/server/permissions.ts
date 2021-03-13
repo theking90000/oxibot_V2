@@ -31,7 +31,7 @@ export const getUser = (u : { guildID : string,userID : string }) : permissionus
             for(const perm of permissions){
                 let p = perm.split('.'),b=true,counter = 0;
                 for(var i=0;i<c.length;i++){
-                    if((p[i] && c[i] === p[i] || p[i] === "*")){
+                    if(((p[i] && c[i] === p[i]) || p[i] === "*")){
                         counter++
                          b = true;         
                     }
@@ -62,5 +62,5 @@ export const getUser = (u : { guildID : string,userID : string }) : permissionus
 
 export const PERMISSIONS = {
     "command.group" : "PermissionCommandGroup",
-    "command.group.permission" : "PermissionCommandGroupPerm"
+    "command.group.permission" : "PermissionCommandGroupPerm",
 }

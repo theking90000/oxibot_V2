@@ -17,8 +17,15 @@ export const updateCache = async () : Promise<void> => {
 
         for(const user of users_){
 
-            usersweb.set(user.DiscordUserID, user)
-            usersweb.set(user.token, user)
+                user.validate()
+                .then(() => {
+                    usersweb.set(user.DiscordUserID, user)
+                    usersweb.set(user.token, user)
+                })
+                .catch(() => {
+
+                })
+            
         }   
 
 }
@@ -33,10 +40,11 @@ export const addUserWeb = async (g_ : createGroupT) => {
     
     if(usersweb.has(g_.userID)) throw new Error("user exists")
     else{
+        const date = new Date()
         const user = new UserWeb({
             DiscordUserID : g_.userID,
             access_token : g_.access_token,
-            expires : g_.expires,
+            expires : Math.round(date.getTime() / 1000) + parseInt(g_.expires),
             token : g_.token,
           })
 
@@ -50,7 +58,21 @@ export const addUserWeb = async (g_ : createGroupT) => {
 
 }
 
-export const getUser = (userID : string) : IUsersWebDocument => usersweb.has(userID) ? usersweb.get(userID) : null
+export const getUser = async (userID : string) : Promise<IUsersWebDocument> => {
+   const user : IUsersWebDocument = usersweb.has(userID) ? usersweb.get(userID) : null
+
+    if(!user) return null
+
+    return new Promise(promise => {
+        user.validate()
+        .then(() => {
+            promise(user)
+        })
+        .catch(() => {
+            promise(null)
+        })
+    })
+}
 
 
 export type ActionUserWeb = {
@@ -70,9 +92,9 @@ type GuildWebUserObj = {
     Guild : Guild,
 }
 
-export const selectUser = (userID : string) : ActionUserWeb => {
+export const selectUser = async (userID : string) : Promise<ActionUserWeb> => {
 
-    let user = getUser(userID)
+    let user = await getUser(userID)
     if(!user) throw new Error("no user with this id")
 
      
@@ -96,7 +118,7 @@ export const selectUser = (userID : string) : ActionUserWeb => {
                 const selectedUP = permission.getUser({guildID: guild.id, userID :user.DiscordUserID})
                 if(!selectedUP) continue
 
-                const SelectU = userCache.selectUser(guild.id,user.DiscordUserID)
+                const SelectU = await userCache.selectUser(guild.id,user.DiscordUserID)
                 if(!SelectU) continue
                 
                 uGuilds.set(guild.id, {
@@ -117,6 +139,27 @@ export const selectUser = (userID : string) : ActionUserWeb => {
     }
 
     return t;
+
+}
+
+export const isUserExist = (userID : string) : boolean => usersweb.has(userID)
+
+export const updateUserToken = async (g_ : createGroupT) => {
+
+    if(!isUserExist(g_.userID)) return;
+
+    const userweb : IUsersWebDocument = usersweb.get(g_.userID);
+    const date = new Date();
+    userweb.access_token = g_.token;
+    userweb.token = g_.token,
+    userweb.DiscordUserID = g_.userID,
+    userweb.expires = Math.round(date.getTime() / 1000) + parseInt(g_.expires);
+      await userweb.save()
+
+      usersweb.set(g_.userID, userweb);
+      usersweb.set(g_.token, userweb);
+
+      return userweb;
 
 }
 

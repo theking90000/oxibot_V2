@@ -9,6 +9,7 @@
         "ServerPreview" : "Aperçu",
         "UserList" : "Utilisateurs",
         "GroupsList" : "Groupes",
+        "SettingsList" : "Paramètres",
         "SearchUserPlaceholder" : "Rechercher un utilisateur ({{counter}})",
         "SelectLanguage" : "Langue ({{currentlang}})",
         "SelectorSearch" : "Rechercher un élément",
@@ -29,7 +30,13 @@
         "EditGroupPermissionDisplay" : "{{permission}}",
         "EditGroupAddPermissionPlaceholder" : "Ajouter une permission",
         "EditGroupAddPermissionLabel" : "Rechercher une permission",
-        "EditGroupAddPermissionButton" : "Ajouter"
+        "EditGroupAddPermissionButton" : "Ajouter",
+        "MainPageBotName" : "OxiBot V2",
+        "MainPageDescription" : "Oxibot V2, Simplement le meilleur bot\nde theking90000",
+        "MainPageManageServer" : "Commencer a gérer un serveur",
+        "ModifySettings" : "Modifier les paramètres du serveur",
+        "SettingsTitle-embed" : "Paramètres des embeds",
+        "SettingsTitle-server" : "Paramètre du serveur"
     },
     "doc" : {
         "permission" : {

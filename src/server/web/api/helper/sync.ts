@@ -2,7 +2,7 @@ import { Permissions, PermissionString } from "discord.js";
 import { ActionUserWeb } from "../../../cache/userweb"
 import { selectUser,getUsers } from "../../../cache/user"
 import { getGroups } from "../../../cache/group"
-import { getUser } from "../../../permissions"
+import { getGuild } from "../../../cache/guilds"
 
 
 export type syncObjD = {
@@ -14,7 +14,13 @@ export type syncObjD = {
         avatar : string,
         avatarURl : string,
     },
-    guilds? : syncObjGuild[]
+    guilds? : syncObjGuild[],
+    inviteGuild? : inviteGuild[]
+}
+
+type inviteGuild = {
+    id : string,
+    invite_url : string,
 }
 
 type syncObjGuild = {
@@ -30,7 +36,8 @@ type syncObjGuild = {
         users? : BasicUser[]
         count : number,
     },
-    groups : groups[]
+    groups : groups[],
+    settings? : setting[]
 }
 
 type groups = {
@@ -45,6 +52,13 @@ type BasicUser = {
         avatarUrl : string,
         groups : String[],
 }
+type setting = {
+    name : string,
+    values : {
+        name : string,
+        value : string,
+    }[]
+}
 
 export default async function (user: ActionUserWeb) : Promise<syncObjD> {
 
@@ -56,6 +70,24 @@ export default async function (user: ActionUserWeb) : Promise<syncObjD> {
         const getUsr = user.guilds.get(id)
         if(!getUsr.permission.hasPermission('panel.guild.see')) continue;
         
+        const settings : setting[] = []
+
+        if(getUsr.permission.hasPermission('panel.settings.see')) {
+            
+           const guildsettings_t = getGuild(id)
+            
+           if(guildsettings_t){
+            const guildsettings = guildsettings_t.toJSON()
+               for(const key in guildsettings.settings){
+                   const params = guildsettings.settings[key];
+                   
+                   settings.push({ name : key, values : params });
+               }
+           }
+
+        }
+        
+
         const guildm : BasicUser[] = [];
        
         const Users = getUsers(id)
@@ -89,7 +121,7 @@ export default async function (user: ActionUserWeb) : Promise<syncObjD> {
             const member = guild.Guild.members.cache.get(user.getDiscord.User.id)
             const group = selectUser(guild.Guild.id,member.id).getGroups().map(x => x.name)
             guildm.push({
-                id : id,
+                id : member.id,
                 nickname : member.nickname,
                 tag : member.user.tag,
                 avatarUrl : member.user.avatarURL({dynamic : true,format : "webp",size : 128}),
@@ -111,9 +143,9 @@ export default async function (user: ActionUserWeb) : Promise<syncObjD> {
                 users : guildm,
                 count : guild.Guild.memberCount,
             },
-            groups : G_G
+            groups : G_G,
+             settings
         })
-
     }
 
     return {

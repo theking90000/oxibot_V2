@@ -11,7 +11,7 @@ const ServersNames = store => {
   return { servers : store.SyncData.guilds,currServ : store.ChangeGuild.guild }
 }
 
-const SelectServer = (props) => {
+const SelectServer = (props : { className? : string } & any) => {
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -26,7 +26,7 @@ const SelectServer = (props) => {
     const { t, i18n } = useTranslation();
     
     return (
-        <div>
+        <div className={props.className} >
             <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
             {
             props.currServ.id === "" ? 

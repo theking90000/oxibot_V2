@@ -3,7 +3,6 @@ import { store } from "../app/app"
 export const getPermission = (userID : string,guildID : string) : string[] => {
     const guild = store.getState().SyncData.guilds.find(c => c.id === guildID);
     if(!guild) return []
-
     const user = guild.members.users.find(c => c.id === userID)
     if(!user) return []
     let permissions = [];

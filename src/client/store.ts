@@ -5,6 +5,8 @@ import createRootReducer from './reducer'
 
 export const history = createBrowserHistory()
 
+const urlParams= new URLSearchParams(window.location.hash)
+if(!urlParams.has("access_token") && !urlParams.has('expires_in'))
 history.replace('/loading')
 
 export default function configureStore(preloadedState) {

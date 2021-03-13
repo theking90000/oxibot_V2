@@ -3,11 +3,13 @@ import  { store } from "../../app"
 import { push } from "connected-react-router"
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import PeopleIcon from '@material-ui/icons/People';
+import SettingsIcon from '@material-ui/icons/Settings';
 import { connect } from 'react-redux'
 import AppBar from "../../Componements/appBar"
 import { getPermission , hasPermission} from "../../../helper/permission"
 import { Switch, Route} from "react-router-dom";
 import UserPage from "./users"
+import SettingsPage from "./Settings"
 import GroupPage from "./groups"
 import ContactsIcon from '@material-ui/icons/Contacts';
 import { ACTIONS } from "../../../reducers/ChangeGuild";
@@ -39,13 +41,16 @@ const MainPageServer = props => {
     permission : "panel.groups.see",
     url : `/groups`,
     icon : <ContactsIcon />
+    },
+    {
+    name : t('SettingsList'),
+    permission : "panel.settings.see",
+    url : `/settings`,
+    icon : <SettingsIcon />
     }]
     
     if(!props.noGuild){
-       
-    console.log(props)
     const perms = getPermission(props.me.id, props.id)
-
     const links = pages.filter(c => {
         if(hasPermission(c.permission, perms ) || !c.permission){
             return c;
@@ -72,6 +77,9 @@ const MainPageServer = props => {
                 </Route>
                 <Route path="/guild/:serverid/groups*">
                     {hasPermission("panel.groups.see",perms) && <GroupPage />}
+                </Route>
+                <Route path="/guild/:serverid/settings*">
+                    {hasPermission('panel.settings.see',perms) && <SettingsPage  />}
                 </Route>
             </Switch>
             

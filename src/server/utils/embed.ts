@@ -1,5 +1,7 @@
 import { MessageEmbed } from "discord.js"
 import { embed_default_color } from "../../../config"
+import { getGuild } from "../cache/guilds"
+import { parsePlaceHolder } from "./placeholders"
 
 type embed_ = {
     fields? : {
@@ -9,6 +11,7 @@ type embed_ = {
     }[],
     color? : string,
     name? : string,
+    guildid? : string,
 }
 
 type emreturn = {
@@ -29,7 +32,23 @@ export default function embed(e : embed_) : emreturn{
         m.addField(c.val1, c.val2 ? c.val2 : " ",c.inline )
     })
 
-    m.setColor(e.color ? e.color : embed_default_color)
+    if(e.guildid){
+        const guild = getGuild(e.guildid);
+        if(guild)
+        var settings = guild.settings
+    }
+
+    const emcolor = (settings && settings.embed.color) ? settings.embed.color : embed_default_color
+    m.setColor(emcolor || embed_default_color)
+
+    if(settings && settings.embed.date) m.setTimestamp( Date.now() )
+
+    const footer = (settings && settings.embed.footer) ? parsePlaceHolder( 
+        {text : settings.embed.footer,
+        guildID : e.guildid
+        }) : false
+
+    if(footer) m.setFooter(footer);
 
     if(e.name) m.title = e.name
 
