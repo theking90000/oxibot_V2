@@ -42,19 +42,19 @@ export default function App() {
          
       <Switch>
 
-          <Route path="/loading"  >
+          <Route exact path="/loading"  >
              <Loading />
           </Route>
 
-          <Route path="/login" >
+          <Route exact path="/login" >
             <Login />
           </Route>
 
-          <Route path="/guild/:serverid/*">
+          <Route exact path="/guild/:serverid/*">
            <MainServerPage />
           </Route>
 
-          <Route path="/" >
+          <Route exact path="/" >
            <MainPage  />
           </Route>
 

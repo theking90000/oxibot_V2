@@ -7,7 +7,7 @@
   "private": true,
   "scripts": {
     "build": "webpack && tsc",
-    "builddev": "webpack --watch",
+    "builddev": "webpack --config webpack.dev.js",
     "serverdev": "tsc --watch",
     "dev": "nodemon dist/server/index.js"
   },
@@ -24,7 +24,6 @@
     "history": "4.10.1",
     "i18next": "^19.9.1",
     "joi": "^17.4.0",
-    "lodash": "^4.17.21",
     "mongoose": "5.11.15",
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.1",
@@ -35,6 +34,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-window": "^1.8.6",
+    "redux": "^4.0.5",
     "redux-toolkit": "^1.1.2",
     "socket.io": "^3.1.2",
     "socket.io-client": "^3.1.2",

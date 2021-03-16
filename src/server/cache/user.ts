@@ -2,6 +2,7 @@ import * as nodeCache from "node-cache";
 import user, {IUsersDocument} from "../database/models/user";
 import  {  IgroupDocument} from "../database/models/groups";
 import { getGroups } from "./group";
+import { gray } from "chalk";
 
 export const users = new nodeCache();
 
@@ -24,7 +25,7 @@ export const updateCache = async () : Promise<void> => {
             users.set(group.guildID , guild) ;
         }   
 
-        
+        console.log(gray(`${group_.length} utilisateurs chargés dans le cache`))
 
 }
 

@@ -37,8 +37,6 @@ export const setup = async (defaultlang : string,langs : {lang : string,langname
         resources[name] = language;
     }
 
-    console.log(resources)
-
     i18n
         .use(initReactI18next)
         .init({

@@ -14,6 +14,10 @@ import GroupPage from "./groups"
 import ContactsIcon from '@material-ui/icons/Contacts';
 import { ACTIONS } from "../../../reducers/ChangeGuild";
 import { useTranslation } from 'react-i18next';
+import CommandsSelector from "./componements/CommandsSelector";
+import EditCommand from "./EditCommand";
+import TranslateIcon from '@material-ui/icons/Translate';
+import LangManager from "./LangManager";
 
 const handleData = (store) => {
     return store.SyncData.guilds.find(c => c.id === store.ChangeGuild.guild.id) || { noGuild : true }
@@ -22,7 +26,11 @@ const handleData = (store) => {
 
 
 const MainPageServer = props => {
-
+    if(props.noGuild){
+        return(
+          <div>ERROR</div>
+        )
+      }
     const { t, i18n } = useTranslation();
 
     const pages = [{
@@ -47,6 +55,12 @@ const MainPageServer = props => {
     permission : "panel.settings.see",
     url : `/settings`,
     icon : <SettingsIcon />
+    },
+    {
+    name : t('CustomLangList'),
+    permission : "panel.customlangs.see",
+    url : `/langs`,
+    icon : <TranslateIcon />
     }]
     
     if(!props.noGuild){
@@ -56,6 +70,15 @@ const MainPageServer = props => {
             return c;
         }
     })
+    console.log(props)
+    const CmdList = []
+
+    for(const cmds of props.cmds){
+        CmdList.push({
+            name : cmds.name,
+            url : `/commands/${cmds.name}`,
+        })
+    }
 
     return (
         <div>
@@ -63,13 +86,13 @@ const MainPageServer = props => {
                 return {
                     action : () => {
                         store.dispatch(push(`/guild/${props.id}${c.url}`))
-                       
-                       store.dispatch(push(`/guild/${props.id}${c.url}`))
                 },
                     name : c.name,
                     icon : c.icon
                 }
-            })} >
+            })}
+            customLink={CmdList[0] ? <CommandsSelector cmds={CmdList} guildid={props.id} /> : <div></div>}
+            >
             
             <Switch >
                 <Route path="/guild/:serverid/users">
@@ -81,14 +104,22 @@ const MainPageServer = props => {
                 <Route path="/guild/:serverid/settings*">
                     {hasPermission('panel.settings.see',perms) && <SettingsPage  />}
                 </Route>
+                <Route path="/guild/:serverid/langs">
+                    {hasPermission('panel.customlangs.see', perms) && <LangManager />}
+                </Route>
+                {CmdList[0] && CmdList.map((value,key) => (
+                    <Route key={key} path={`/guild/${props.id}${value.url}`}>
+                        {hasPermission('panel.commands.edit',perms) && <EditCommand {...props} cmd_name={value.name} />}
+                    </Route>
+                ))}
             </Switch>
             
             </AppBar>
         </div>
     )
         }
-        store.dispatch({type : ACTIONS.SET_GUILD_NONE})
-    return null
+    store.dispatch({type : ACTIONS.SET_GUILD_NONE})
+    return (<div>Error...</div>)
    
 }
 

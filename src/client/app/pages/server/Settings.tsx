@@ -138,9 +138,16 @@ type setting = {
 
 const Settings = (props ) => {
 
+    if(props.noGuild){
+        return(
+          <div>ERROR</div>
+        )
+      }
+
     const classes = useStyles()
     const { t, i18n } = useTranslation();
-
+    const [fade,setFade] = React.useState(false)
+    const [cats,setCats] = React.useState([])
     React.useEffect(() => {
         setFade(true)
        return () => {
@@ -153,20 +160,16 @@ const Settings = (props ) => {
 
     }] */
 
-    if(props.noGuild){
-        store.dispatch(replace("/"))
-        return (<div>null</div>)
-     }
-
-     const [cats,setCats] = React.useState([])
-
-     React.useEffect(() => {
+    React.useEffect(() => {
         setCats(props.settings)
      }, [props.settings])
 
-     const [fade,setFade] = React.useState(false)
- 
      
+
+     
+
+     
+
 
     return (
         <div className={classes.root}>

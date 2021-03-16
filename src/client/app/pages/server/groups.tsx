@@ -48,7 +48,11 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const GroupsPage = props => {
-
+  if(props.error){
+    return(
+      <div>ERROR</div>
+    )
+  }
     const classes = useStyles()
 
     const [fade,setFade] = React.useState(false)
@@ -74,11 +78,7 @@ const GroupsPage = props => {
       store.dispatch(push(path + "/test"))
     }
 
-    if(props.error){
-      return(
-        <div>ERROR</div>
-      )
-    }
+    
 
     const {t,i18n} = useTranslation()
     const path = !props.error ? `/guild/${props.guild.id}/groups` : ""

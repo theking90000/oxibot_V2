@@ -4,8 +4,12 @@ import * as Guilds from "../../cache/guilds"
 const router = express.Router();
 
 router.use( (req,res,next) => {
-    if(req.body && req.body.guild){
+    if(req.body && req.body.guild && req.user.guilds.get(req.body.guild)){
+        if(req.user.guilds.get(req.body.guild).permission.hasPermission('panel.settings.manage')){
             next();
+        }else{
+            return res.status(401).json({success : false})
+        }
     }   else{
         return res.status(400).json({success : false})
     }
@@ -13,7 +17,7 @@ router.use( (req,res,next) => {
 })
 
 router.put("/settings" , async (req,res,next) => {
-    if((req.body.value !== undefined) && req.body.cat && req.body.name ){
+    if((req.body.value !== undefined) && req.body.cat && req.body.name){
         if(await Guilds.updateSettingVal({ 
             cat : req.body.cat,
             id : req.body.guild,

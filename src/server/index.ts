@@ -4,7 +4,7 @@ import { register_commands } from "./commands";
 import { register_event } from "./event";
 import { register_cache } from "./cache";
 import { connectdb } from "./database/database";
-import { blueBright } from "chalk"
+import { blueBright, red, redBright } from "chalk"
 import web from "./web/app";
 
 const client = new Client();
@@ -29,6 +29,13 @@ const client = new Client();
 
     web()
 
+})
+
+process.on('uncaughtException', (err) => {
+    console.log(redBright("Une erreur est survenue :") + red(err.message))
+})
+process.on('unhandledRejection', (err) => {
+    console.log(redBright("Une erreur est survenue : ") + red(err) )
 })
 
 export default client;

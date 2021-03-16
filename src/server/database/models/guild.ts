@@ -23,8 +23,40 @@ const GuildSchema = new mongoose.Schema({
         server : {
             prefix : String,   
         },
+    },
+    commands :  [{
+            enabled : {
+                type : Boolean,
+                default : true,
+            },
+            settings : {},
+            name : String
+        }],
+    saves : {
+        backups_cat : {
+            name : {
+                type : String,
+                required : false,
+            },
+            id : {
+                type : String,
+                required : false,
+            }
+        }
     }
 })
+
+export interface commandBaseSettings  {
+    enabled : boolean,
+    settings : {
+        name : string,
+        settings : {
+            canBeDisabled? : boolean,
+            data : any,
+        }
+    },
+    name : string,
+}
 
 export interface IGuildDocument extends mongoose.Document{
     guildID : string,
@@ -37,6 +69,13 @@ export interface IGuildDocument extends mongoose.Document{
         server : {
             prefix : string,
         }
+    },
+    commands : commandBaseSettings[],
+    saves : {
+        backups_cat : {
+            name : string,
+            id : string,
+        },
     }
 } 
 

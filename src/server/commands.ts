@@ -1,5 +1,5 @@
 import * as path from "path";
-import { Message } from "discord.js";
+
 import { readdirSync } from "fs";
 import { message_ } from "./events/message";
  
@@ -11,7 +11,7 @@ export const register_commands = () => {
 
     for(const file of commandsFile) {
         const command = require(path.join(__dirname , 'commands' ,  file));
-        if(command.default.name && command.default.execute)
+        if(command.default && command.default.name && command.default.execute)
         commands.set(command.default.name, command.default);
     }
 
@@ -24,5 +24,9 @@ export type commandType = {
 
     name : string,
     execute : (message : message_) => void,
+    settings? : {
+        canBeDisabled? : boolean,
+        data : any
+    }
 
 }

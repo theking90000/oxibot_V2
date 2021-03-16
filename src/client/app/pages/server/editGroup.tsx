@@ -57,12 +57,14 @@ const StoreHandler = store => {
 const elem = (props) => {
 
 
-    const classes = useStyle();
+    
     
     const group = props.guild.groups.find(c => c.name === props.group);
     if(!group)
-    store.dispatch({ type: ACTIONS.SET_GUILD_NONE })
-
+        return(
+          <div>ERROR</div>
+        )
+    const classes = useStyle();
     const {t , i18n} = useTranslation()
 
     var Availables;
@@ -79,7 +81,7 @@ const elem = (props) => {
                 Availables.push({name : key,desc : t(`doc.permissions.${value}`, {perm : key})})
             }
         }
-        console.log(Availables)
+
         SetPermDisplayed((state) => group.permission)
         SetAvailablesPerm((state) => Availables)
     }, [props.guild])

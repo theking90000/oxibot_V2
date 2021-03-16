@@ -1,3 +1,4 @@
+import { gray } from "chalk";
 import * as nodeCache from "node-cache";
 import Group, {IgroupDocument} from "../database/models/groups";
 import * as UserCache from "./user"
@@ -22,7 +23,7 @@ export const updateCache = async () : Promise<void> => {
             groups.set(group.guildID , guild) ;
         }   
 
-        
+        console.log(gray(`${group_.length} groupes chargés dans le cache`))
 
 }
 

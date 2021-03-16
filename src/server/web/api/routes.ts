@@ -9,6 +9,8 @@ import userRouter from "./user"
 import GroupRouter from "./group"
 import DocRouter from "./doc"
 import GuildRouter from "./guild"
+import CommandRouter from "./command"
+import LangRouter from "./lang"
 import { defaultlocale } from "../../../../config"
 import { getAllLang } from "../../cache/lang"
 
@@ -105,7 +107,8 @@ router.use(json())
         if(!user) return res.status(401).json({success : false})
 
         return res.status(200).json({success: true,defaultlocale,availableslang : getAllLang() , data : await syncFormat(user)})
-      }catch{
+      }catch(err){
+        console.log(err)
         return res.status(401).json({success : false})
       }
       
@@ -133,5 +136,12 @@ router.use(json())
      * @name /guild/*
      */
     router.use('/guild', GuildRouter)
+
+    /**
+     * @name /command/*
+     */
+    router.use('/command', CommandRouter)
+
+    router.use('/lang', LangRouter)
 
 export default router;

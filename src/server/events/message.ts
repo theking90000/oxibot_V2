@@ -3,7 +3,7 @@ import {prefix} from "../../../config"
 import commands from "../commands"
 import { permissionuser,getUser } from "../permissions"
 import {  Message } from "discord.js";
-import { getGuild } from "../cache/guilds";
+import { getCommandData, getGuild } from "../cache/guilds";
 import { IGuildDocument } from "../database/models/guild";
 
 export interface message_ extends Message {
@@ -11,9 +11,10 @@ export interface message_ extends Message {
     args? : string[],
     prefix? : string,
     guild_params? : IGuildDocument,
+    data? : any,
 } 
 
-const HandleGuildMessage = (message : Message) => {
+const HandleGuildMessage = async (message : Message) => {
     const guild = getGuild(message.guild.id)
     const prefix_  = guild ? guild.settings.server.prefix : prefix
 
@@ -31,9 +32,15 @@ const HandleGuildMessage = (message : Message) => {
 
     if(commands.has(command_)){
         try{
-            commands.get(command_).execute(msg)
+            const data = await getCommandData(message.guild.id,command_);
+            if(data)msg.data = data.settings.settings.data;
+            if(!data || data.enabled === true){
+                commands.get(command_).execute(msg)
+            }
+            
         }
-        catch{
+        catch(err){
+            console.log(err)
             message.react('❌')
         }
     }

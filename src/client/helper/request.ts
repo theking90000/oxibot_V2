@@ -10,7 +10,7 @@ export default async function Request_Helper(data : {
      data : string,
      auth? : boolean,
      method? : string
-    }) : Promise<Response | Object | Blob> {
+    }) : Promise<Response | any | Blob> {
     
      const headers = {}
 

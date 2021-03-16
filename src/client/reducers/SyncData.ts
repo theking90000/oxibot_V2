@@ -53,6 +53,22 @@ export const DeleteGroup = async (obj : { group : string,ServerID : string }) =>
  return { type : ACTIONS.DELETE_GROUP,payload : obj }
 }
 
+export const SetCommandEnabled = async (obj : {ServerID : string,value : boolean,name : string}) => {
+  await Request_Helper({
+    data : JSON.stringify({
+      guild : obj.ServerID,
+      name : obj.name,
+      value : obj.value,
+    }),
+    api : true,
+    route : "command/enable",
+    method : "PUT",
+    response : "json",
+  })
+
+  return { type : ACTIONS.DISABLE_COMMAND,payload: obj}
+}
+
 export const update_settings_value = async (payload : { ServerID : string,cat : string,name : string,value : any }) => {
 
   await Request_Helper({ 
@@ -71,6 +87,25 @@ export const update_settings_value = async (payload : { ServerID : string,cat : 
  return {type : ACTIONS.UPDATE_SETTINGS_VALUE , payload}
 }
 
+export const set_command_setting = async (payload : { ServerID : string,name : string,setting : string,value : any }) => {
+
+  await Request_Helper({ 
+    data : JSON.stringify({
+    guild : payload.ServerID,
+    setting : payload.setting,
+    name : payload.name,
+    value: payload.value,
+    }),
+    api : true,
+    route : "command/data",
+    method : "PUT",
+    response : "json",
+ })
+
+ return {type: ACTIONS.SET_COMMAND_SETTING, payload}
+
+}
+
 export const ACTIONS = {
     REPLACE_DATA : "@SyncManager:REPLACE_DATA",
     UPDATE_USER_GROUP : "@SyncManager:UPDATE_USER_GROUP",
@@ -78,6 +113,38 @@ export const ACTIONS = {
     CREATE_GROUP : "@SyncManager:CREATE_GROUP",
     DELETE_GROUP : "@SyncManager:DELETE_GROUP",
     UPDATE_SETTINGS_VALUE : "@SyncManager:UPDATE_SETTINGS_VALUE",
+    DISABLE_COMMAND : "@SyncManager:DISABLE_COMMAND",
+    SET_COMMAND_SETTING : "@SyncManager:SET_COMMAND_SETTING",
+    CREATE_REMOVE_LANGAGE : "@SyncManager:CREATE_REMOVE_LANGAGE",
+}
+
+export const create_remove_langage = async (payload_ : {
+  action : "CREATE" | 'DELETE',ServerID : string,
+  name : string,
+  code : string,
+  template? : string,
+}) => {
+
+  const res = await Request_Helper({
+    data : JSON.stringify({
+      guild : payload_.ServerID,
+      langname : payload_.name,
+      langcode : payload_.code,
+      action: payload_.action,
+      }),
+      api : true,
+      route : "lang",
+      method : "POST",
+      response : "json",
+  }) as any
+
+  if(!res.success || (payload_.action === "CREATE" && !res.translations)){
+    return {type : "null",payload : {}}
+  }
+  const payload = {...payload_, translations : res.translations}
+
+  return {type : ACTIONS.CREATE_REMOVE_LANGAGE,payload}
+
 }
 
 export default function SyncManager(state = SyncManager_initialState, action) {
@@ -153,7 +220,6 @@ export default function SyncManager(state = SyncManager_initialState, action) {
   }
 
     case ACTIONS.UPDATE_SETTINGS_VALUE : {
-      console.log(action.payload)
       state.guilds = state.guilds.map(guild => {
         if(guild.id === action.payload.ServerID){
           guild.settings = guild.settings.map(setting => {
@@ -165,6 +231,52 @@ export default function SyncManager(state = SyncManager_initialState, action) {
         }
         return guild
     })
+    }
+
+    case ACTIONS.DISABLE_COMMAND : {
+      state.guilds = state.guilds.map(guild => {
+        if(guild.id=== action.payload.ServerID){
+          guild.cmds= guild.cmds.map(cmd => {
+            if(cmd.name === action.payload.name){
+              cmd.enabled = action.payload.value
+            }
+            console.log(action.payload.value)
+            return cmd
+          })
+        }
+        return guild
+      })
+      return state;
+    }
+
+    case ACTIONS.SET_COMMAND_SETTING : {
+      const _guild = state.guilds.find(x => x.id === action.payload.ServerID)
+
+      if(_guild){
+        const set =_guild.cmds.find(c=> c.name === action.payload.name);
+        if(set && set.settings.settings.data[action.payload.setting]){
+          set.settings.settings.data[action.payload.setting].value = action.payload.value
+        }
+      }
+      return state
+    }
+    case ACTIONS.CREATE_REMOVE_LANGAGE : {
+      const _guild = state.guilds.find(x => x.id === action.payload.ServerID)
+      if(action.payload.action === "CREATE"){
+        if(_guild && action.payload.code && action.payload.name && !_guild.customslangs.find(c => c.code === action.payload.code)){
+          _guild.customslangs.push({
+            code : action.payload.code,
+            name : action.payload.name,
+            translations : action.payload.translations
+          })
+        }
+      }
+      if(action.payload.action === "DELETE"){
+        if(_guild && action.payload.code && action.payload.name && _guild.customslangs.find(c => c.code === action.payload.code)){
+          _guild.customslangs.filter(x => x.code !== x.code);
+        }
+      }
+      return state;
     }
       default:
         

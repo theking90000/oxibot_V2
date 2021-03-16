@@ -1,5 +1,11 @@
 {
     "name" : "français",
+    "internal" : {
+
+    },
+    "bot" : {
+        "GroupCommandEmbedDefaultTitle" : "Gérer les groupes"
+    },
     "web" : {
         "MainTitle" : "Accueil",
         "Back" : "Retour",
@@ -10,6 +16,7 @@
         "UserList" : "Utilisateurs",
         "GroupsList" : "Groupes",
         "SettingsList" : "Paramètres",
+        "CustomLangList" : "Langues",
         "SearchUserPlaceholder" : "Rechercher un utilisateur ({{counter}})",
         "SelectLanguage" : "Langue ({{currentlang}})",
         "SelectorSearch" : "Rechercher un élément",
@@ -36,7 +43,20 @@
         "MainPageManageServer" : "Commencer a gérer un serveur",
         "ModifySettings" : "Modifier les paramètres du serveur",
         "SettingsTitle-embed" : "Paramètres des embeds",
-        "SettingsTitle-server" : "Paramètre du serveur"
+        "SettingsTitle-server" : "Paramètre du serveur",
+        "CommandsNameTitle" : "Commandes",
+        "CommandName" : "Commande de {{cmd}}",
+        "CommandSetting" : "Paramètres",
+        "EnableCommand" : "Commande activée",
+        "LangInList" : "{{langname}} ({{langcode}})",
+        "LangListNoLang" : "Il n'y a aucune langue",
+        "CreateLangTitle" : "Créer une langue",
+        "CreateLangErrorNamePlaceholder" : "Nom incorrect",
+        "CreateLangNamePlaceholder" : "Entrez un nom",
+        "CreateLangCodePlaceholder" : "Entrez un code (fr-FR)",
+        "CreateLangErrorCodePlaceholder" : "Code incorrect",
+        "EditLangTitle" : "Modifier",
+        "SearchLangKeyTitle" : "Rechercher une clé"
     },
     "doc" : {
         "permission" : {

@@ -74,17 +74,32 @@ export default function UserC(props : { perms: string[],pseudo? : string,name : 
             }))
         }
       }
+      const [url,setUrl] = React.useState(props.url.split('?')[0].endsWith('.gif') ? 
+        props.url.replace(".gif",".jpg") : props.url
+      )
+
+      const handleEnter = () =>{
+        setUrl(props.url)
+      }
+
+      const handleLeave = () => {
+        setUrl(props.url.split('?')[0].endsWith('.gif') ? 
+        props.url.replace(".gif",".jpg") : props.url)
+      }
+
+      
+
       const {t, i18n} = useTranslation()
 
       const name = props.pseudo ? t('UserFormatListNickName', { tag : props.name, nickname : props.pseudo}) : t("UserFormatList", {  tag : props.name})
 
 
 return (
-    <ListItem  >
+    <ListItem onMouseEnter={handleEnter} onMouseLeave={handleLeave} >
         <Card className={classes.card} >
             <CardContent className={classes.cardContent}>
               <div>
-                <Avatar alt={props.name} src={props.url} />
+                <Avatar alt={props.name} src={url} />
                 <Typography >{name}</Typography>
                 </div>
                 <Selector 

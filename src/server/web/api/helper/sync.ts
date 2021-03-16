@@ -1,8 +1,9 @@
-import { Permissions, PermissionString } from "discord.js";
 import { ActionUserWeb } from "../../../cache/userweb"
 import { selectUser,getUsers } from "../../../cache/user"
 import { getGroups } from "../../../cache/group"
 import { getGuild } from "../../../cache/guilds"
+import { commandBaseSettings } from "../../../database/models/guild";
+import { getAllLang, GetAllServersCustomLangs } from "../../../cache/lang";
 
 
 export type syncObjD = {
@@ -36,8 +37,17 @@ type syncObjGuild = {
         users? : BasicUser[]
         count : number,
     },
+    cmds? : commandBaseSettings[],
     groups : groups[],
-    settings? : setting[]
+    settings? : setting[],
+    customslangs : customlangs[],
+    availableslangs : string[]
+}
+
+type customlangs = {
+    name : string,
+    code : string,
+    translations : any,
 }
 
 type groups = {
@@ -129,6 +139,27 @@ export default async function (user: ActionUserWeb) : Promise<syncObjD> {
             })
             
         }
+        let cmds : commandBaseSettings[];
+        if(getUsr.permission.hasPermission('panel.commands.see')){
+            const guild_b = getGuild(guild.Guild.id)
+            if(guild_b)
+            cmds = guild_b.commands.map(x => ({
+                enabled : x.enabled,
+                name : x.name,
+                settings : x.settings,
+            }))
+        }
+        let customslangs 
+        if(getUsr.permission.hasPermission('panel.customlangs.see')){
+            customslangs = (await GetAllServersCustomLangs(guild.Guild.id)).map(c => {
+                const _c : any = c
+                return {
+                        code : c.langcode,
+                        name : c.langname,
+                        translations : _c._doc.translation,
+                }
+             }) 
+        }
 
         guilds.push({
             id : guild.Guild.id,
@@ -143,8 +174,11 @@ export default async function (user: ActionUserWeb) : Promise<syncObjD> {
                 users : guildm,
                 count : guild.Guild.memberCount,
             },
+            cmds,
             groups : G_G,
-             settings
+             settings,
+             customslangs,
+             availableslangs : getAllLang().map(x=>x.lang),
         })
     }
 
