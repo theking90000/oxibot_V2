@@ -123,7 +123,7 @@ export default async function (user: ActionUserWeb) : Promise<syncObjD> {
             if(member.user.bot) continue;
 
             
-            const group = Users.find(x => x.userID === id).Groups
+            const group = Users.find(x => x.userID === id) ? Users.find(x => x.userID === id).Groups : []
         guildm.push({
                 id : id,
                 nickname : member.nickname,

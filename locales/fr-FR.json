@@ -5,7 +5,12 @@
     },
     "bot" : {
         "GroupCommandEmbedDefaultTitle" : "Gérer les groupes",
-        "GroupCommandEmbedDefaultList" : "{{prefix}}group list"
+        "GroupCommandEmbedDefaultList" : "{{prefix}}group list",
+        "GroupCommandEmbedDefaultListDescription" :  "Renvoie la liste des groupes\\n(permission : {{permission}})",
+        "GroupCommandEmbedDefaultPermission" : "{{prefix}}group <groupe> permission",
+        "GroupCommandEmbedDefaultPermissionDescription" : "Voir la liste des permissions du groupe\\n(permission : {{permission}})",
+        "GroupCommandEmbedDefaultAdduser" : "{{prefix}}group <groupe> adduser @mention",
+        "GroupCommandEmbedDefaultAdduserDescription" : "Ajoute un utilisateur au groupe\\n(permission : {{permission}})"
     },
     "web" : {
         "MainTitle" : "Accueil",

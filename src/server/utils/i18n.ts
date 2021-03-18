@@ -54,6 +54,7 @@ export const getLangFromMessage = async (info: {
                         }
                     }
                 }
+                text = text.replace(/<br>/g, "\n").replace(/\\n/g, "\n")
                 return parsePlaceHolder({
                     text: text.replace(/{{\w*}}/, ""),
                     guildID: info.guild ? info.guild.guildID : null,

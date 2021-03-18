@@ -13,15 +13,19 @@ const command : commandType = {
                    guildid : message.guild.id,
                      fields : [{
                          val1: message.lang.t(`GroupCommandEmbedDefaultList`, { prefix: message.prefix }),
-                             val2 : "Renvoie la liste des groupes\n(permission : command.group.list)"
+                         val2: message.lang.t(`GroupCommandEmbedDefaultListDescription`, { permission: "command.group.list" })
                          },
                          {
-                             val1 : `${message.prefix}group <groupe> permission`,
-                             val2 : "Voir la liste des permissions du groupe\n(permission : command.group.permission)"
+                             val1: message.lang.t(`GroupCommandEmbedDefaultPermission`, { prefix: message.prefix }),
+                             val2: message.lang.t(`GroupCommandEmbedDefaultPermissionDescription`, {
+                                 permission: "command.group.permission"
+                             })
                          },
                          {
-                             val1 : `${message.prefix}group <groupe> adduser @mention`,
-                             val2 : "ajoute un utilisateur au groupe\n(permission : command.group.adduser)"
+                             val1: message.lang.t(`GroupCommandEmbedDefaultAdduser`, { prefix: message.prefix }),
+                             val2: message.lang.t(`GroupCommandEmbedDefaultAdduserDescription`, {
+                                 permission: "command.group.permission"
+                             })
                          }]
                     }).getEmbed()) 
                 }

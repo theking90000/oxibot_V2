@@ -176,7 +176,6 @@ const __elem = (props: any) => {
             code: props.lang.code
         }))
     }
-
     return (
         <div>
         <div className={classes.box}>
@@ -204,9 +203,9 @@ const __elem = (props: any) => {
                         {t("ForcedChannelLang")}
                     </Typography>
 
-                    {!props.channels && <CircularProgress />}
+                    {(!props.channels || !props.lang.forcedChannels) && <CircularProgress />}
                     <div>
-                        {props.channels && <Selector
+                        {(props.channels && props.lang.forcedChannels) && <Selector
                             selected={(props.lang.forcedChannels && props.lang.forcedChannels.length > 0) ? props.lang.forcedChannels.map(ch => {
                                 const c = props.channels.find(chx => chx.id === ch);
                                 if (c)
@@ -216,7 +215,7 @@ const __elem = (props: any) => {
                                         value: c.id
                                     })
                             }) : []}
-                            availables={props.channels.filter(x => x.type === "text" && (props.lang.forcedChannel && !props.lang.forcedChannels.includes(x.id))).map((c, index) => {
+                            availables={props.channels.filter(x => x.type === "text" && (!props.lang.forcedChannels.includes(x.id))).map((c, index) => {
 
                                 return ({
                                     name: c.name,
