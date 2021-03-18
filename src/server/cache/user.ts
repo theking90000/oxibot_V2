@@ -4,7 +4,7 @@ import  {  IgroupDocument} from "../database/models/groups";
 import { getGroups } from "./group";
 import { gray } from "chalk";
 
-export const users = new nodeCache();
+export const users = new nodeCache({ useClones: false });
 
 export const getUsers = (serverid : string) : IUsersDocument[] => {
     
@@ -32,7 +32,7 @@ export const updateCache = async () : Promise<void> => {
 type createGroupT = {
     userID : string,
     guildID : string,
-    Groups : string[],
+    Groups: string[],
 }
 export const addUser = async (g_ : createGroupT) => {
     let users_ = getUsers(g_.guildID)
@@ -50,8 +50,9 @@ export const addUser = async (g_ : createGroupT) => {
 export type userS = {
     addGroup(groupname : string) : void,
     removeGroup(groupname : string) : void,
-    getGroups() : IgroupDocument[];
-    user : IUsersDocument;
+    getGroups(): IgroupDocument[],
+    user: IUsersDocument,
+    readonly lang: string,
 }
 
 export const selectUser = (guildID : string,userID : string) : userS=>{
@@ -123,7 +124,8 @@ export const selectUser = (guildID : string,userID : string) : userS=>{
 
             return c;
         },
-        user : user
+        user,
+        lang: user.lang,
     }
 }
 

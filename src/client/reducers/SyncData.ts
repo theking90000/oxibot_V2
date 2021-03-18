@@ -114,38 +114,10 @@ export const ACTIONS = {
     DELETE_GROUP : "@SyncManager:DELETE_GROUP",
     UPDATE_SETTINGS_VALUE : "@SyncManager:UPDATE_SETTINGS_VALUE",
     DISABLE_COMMAND : "@SyncManager:DISABLE_COMMAND",
-    SET_COMMAND_SETTING : "@SyncManager:SET_COMMAND_SETTING",
-    CREATE_REMOVE_LANGAGE : "@SyncManager:CREATE_REMOVE_LANGAGE",
+  SET_COMMAND_SETTING: "@SyncManager:SET_COMMAND_SETTING",
 }
 
-export const create_remove_langage = async (payload_ : {
-  action : "CREATE" | 'DELETE',ServerID : string,
-  name : string,
-  code : string,
-  template? : string,
-}) => {
 
-  const res = await Request_Helper({
-    data : JSON.stringify({
-      guild : payload_.ServerID,
-      langname : payload_.name,
-      langcode : payload_.code,
-      action: payload_.action,
-      }),
-      api : true,
-      route : "lang",
-      method : "POST",
-      response : "json",
-  }) as any
-
-  if(!res.success || (payload_.action === "CREATE" && !res.translations)){
-    return {type : "null",payload : {}}
-  }
-  const payload = {...payload_, translations : res.translations}
-
-  return {type : ACTIONS.CREATE_REMOVE_LANGAGE,payload}
-
-}
 
 export default function SyncManager(state = SyncManager_initialState, action) {
     switch (action.type) {
@@ -260,24 +232,7 @@ export default function SyncManager(state = SyncManager_initialState, action) {
       }
       return state
     }
-    case ACTIONS.CREATE_REMOVE_LANGAGE : {
-      const _guild = state.guilds.find(x => x.id === action.payload.ServerID)
-      if(action.payload.action === "CREATE"){
-        if(_guild && action.payload.code && action.payload.name && !_guild.customslangs.find(c => c.code === action.payload.code)){
-          _guild.customslangs.push({
-            code : action.payload.code,
-            name : action.payload.name,
-            translations : action.payload.translations
-          })
-        }
-      }
-      if(action.payload.action === "DELETE"){
-        if(_guild && action.payload.code && action.payload.name && _guild.customslangs.find(c => c.code === action.payload.code)){
-          _guild.customslangs.filter(x => x.code !== x.code);
-        }
-      }
-      return state;
-    }
+
       default:
         
         return state

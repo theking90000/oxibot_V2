@@ -9,10 +9,10 @@ const command : commandType = {
     execute : async (message) => {
             if(!message.args[0] && message.userPerm.hasPermission('command.group')){
                message.channel.send(embed({
-                   name : "Gérer les groupes",
+                   name: message.lang.t(`GroupCommandEmbedDefaultTitle`, { test: "test" }),
                    guildid : message.guild.id,
                      fields : [{
-                             val1 : `${message.prefix}group list`,
+                         val1: message.lang.t(`GroupCommandEmbedDefaultList`, { prefix: message.prefix }),
                              val2 : "Renvoie la liste des groupes\n(permission : command.group.list)"
                          },
                          {

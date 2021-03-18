@@ -4,7 +4,7 @@ import { routerMiddleware } from 'connected-react-router'
 import createRootReducer from './reducer'
 
 export const history = createBrowserHistory()
-
+export const __first = location.pathname;
 const urlParams= new URLSearchParams(window.location.hash)
 if(!urlParams.has("access_token") && !urlParams.has('expires_in'))
 history.replace('/loading')

@@ -40,8 +40,12 @@ type syncObjGuild = {
     cmds? : commandBaseSettings[],
     groups : groups[],
     settings? : setting[],
-    customslangs : customlangs[],
-    availableslangs : string[]
+    availableslangs : string[],
+}
+export type channel = {
+    name : string,
+    id : string,
+    type : "text" | "voice" | "category" | "news" | "store"
 }
 
 type customlangs = {
@@ -124,7 +128,7 @@ export default async function (user: ActionUserWeb) : Promise<syncObjD> {
                 id : id,
                 nickname : member.nickname,
                 tag : member.user.tag,
-                avatarUrl : member.user.avatarURL({dynamic : true,format : "webp",size : 128}),
+                avatarUrl : member.user.displayAvatarURL({dynamic : true,format : "webp",size : 128}),
                 groups : group ? group : [] 
             })
         }}else{
@@ -134,7 +138,7 @@ export default async function (user: ActionUserWeb) : Promise<syncObjD> {
                 id : member.id,
                 nickname : member.nickname,
                 tag : member.user.tag,
-                avatarUrl : member.user.avatarURL({dynamic : true,format : "webp",size : 128}),
+                avatarUrl : member.user.displayAvatarURL({dynamic : true,format : "webp",size : 128}),
                 groups : group ? group : [] 
             })
             
@@ -149,17 +153,8 @@ export default async function (user: ActionUserWeb) : Promise<syncObjD> {
                 settings : x.settings,
             }))
         }
-        let customslangs 
-        if(getUsr.permission.hasPermission('panel.customlangs.see')){
-            customslangs = (await GetAllServersCustomLangs(guild.Guild.id)).map(c => {
-                const _c : any = c
-                return {
-                        code : c.langcode,
-                        name : c.langname,
-                        translations : _c._doc.translation,
-                }
-             }) 
-        }
+
+        
 
         guilds.push({
             id : guild.Guild.id,
@@ -177,8 +172,8 @@ export default async function (user: ActionUserWeb) : Promise<syncObjD> {
             cmds,
             groups : G_G,
              settings,
-             customslangs,
              availableslangs : getAllLang().map(x=>x.lang),
+            
         })
     }
 

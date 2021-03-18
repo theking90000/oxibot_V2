@@ -3,6 +3,8 @@ import { push, replace } from 'connected-react-router'
 import { ACTIONS } from "./reducers/SyncData"
 import { setup } from "./i18n"
 import { setPermissionList } from "./reducers/Docs"
+import {__first} from "./store"
+import { AutoDetectGuild } from "./reducers/ChangeGuild"
 
 declare const window : any
 
@@ -55,7 +57,8 @@ export default async function start(){
         setPermissionList(reqsj);
 
         store.dispatch(({ type : ACTIONS.REPLACE_DATA, payload : json.data }))
-        store.dispatch(replace('/'))
+        AutoDetectGuild(__first)
+        setTimeout(()=> store.dispatch(replace(__first === "/loading" || __first === "/login" ? "/" : __first)),250)
         }else{
             store.dispatch(replace('/login'));
         }

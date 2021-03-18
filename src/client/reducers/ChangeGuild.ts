@@ -18,19 +18,20 @@ export const ACTIONS = {
 export const setupListener = () => {
 
 history.listen((s) => {
-  if(store.getState().ChangeGuild.guild.id !== "" && s.pathname === "/"){
+  AutoDetectGuild(s.pathname)
+})
+}
+
+export const AutoDetectGuild = (path : string) => {
+  if(!path.startsWith('/guild/')){
     store.dispatch({type : ACTIONS.SET_GUILD_NONE,payload : {nochange : true}})
   }
-  if(s.pathname.startsWith("/guild")){
-    const match :any = createMatchSelector({ path: '/guild/:serverid/*' })(store.getState())
-    if(match && match.params && match.params.serverid){
-      if(match.params.serverid !== store.getState().ChangeGuild.guild.id){
-        store.dispatch({type : ACTIONS.SET_CURRENT_GUILD, payload : {id : match.params.serverid , nochange : true}})
-      }
+  if(path.startsWith("/guild")){
+    const id :string[] = path.split('/')
+    if(id && id[2]&& id[2] !== store.getState().ChangeGuild.guild.id){
+        store.dispatch({type : ACTIONS.SET_CURRENT_GUILD, payload : {id : id[2] , nochange : true}})
     }
   }
-
-})
 }
 
 export default function ChangeGuild(state = SyncManager_initialState, action) {

@@ -2,7 +2,7 @@ import * as React from "react";
 import { AnyIfEmpty, connect } from "react-redux";
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
-import Fade from '@material-ui/core/Fade';
+import Grow from '@material-ui/core/Grow';
 import { getPermission } from "../../../helper/permission"
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
@@ -146,38 +146,31 @@ const Settings = (props ) => {
 
     const classes = useStyles()
     const { t, i18n } = useTranslation();
-    const [fade,setFade] = React.useState(false)
+
+    const [fade_,setFade] = React.useState(false)
+
     const [cats,setCats] = React.useState([])
-    React.useEffect(() => {
+
+    React.useLayoutEffect(() => {
         setFade(true)
        return () => {
-           setFade(false)
+        setFade(false)
        }
     }, [])
-
-    /**   const settings : setting = [{
-        name : t('SettingsEmebdTitle'),
-
-    }] */
 
     React.useEffect(() => {
         setCats(props.settings)
      }, [props.settings])
 
      
-
-     
-
-     
-
-
     return (
         <div className={classes.root}>
-        <Fade in={fade} >
-            <React.Fragment>
+        <Grow in={fade_} >
+            <div>
+            <React.Fragment >
             {cats[0] && <Grid container>
               <Grid item xs={12} >
-                <Typography variant="h2" >
+                <Typography variant="h2">
                     {t('ModifySettings')}
                 </Typography>
                 </Grid>
@@ -209,7 +202,8 @@ const Settings = (props ) => {
                 </Grid>}
             {!cats[0] && <Grid item xs={12} >ok</Grid>}
             </React.Fragment>
-        </Fade>
+            </div>
+        </Grow>
         </div>
     )
 }

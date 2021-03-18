@@ -11,13 +11,18 @@ const UserSchema : mongoose.Schema = new mongoose.Schema({
     },
     Groups : [{
         type : String,
-    }]
+    }],
+    lang: {
+        type: String,
+        required: false,
+    }
 })
 
 export interface IUsersDocument extends mongoose.Document{
     userID : string,
     guildID : string,
-    Groups : string[],
+    Groups: string[],
+    lang?: string,
     
 } 
 

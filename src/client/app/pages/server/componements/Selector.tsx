@@ -10,11 +10,13 @@ import List from '@material-ui/core/List';
 import ListItem, { ListItemProps } from '@material-ui/core/ListItem';
 import TextField from '@material-ui/core/TextField';
 import { useTranslation } from 'react-i18next';
-
+import {FixedSizeList} from "react-window"
+import { Divider } from "@material-ui/core";
 
 
 type val = {
     name : string,
+    elem? : JSX.Element,
     value : any 
 }
 
@@ -22,7 +24,6 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
-      justifyContent: 'center',
       flexWrap: 'wrap',
       listStyle: 'none',
       padding: theme.spacing(0.5),
@@ -45,7 +46,14 @@ const useStyles = makeStyles((theme: Theme) =>
       cursor : "pointer",
     },
     ListItem : {
-      background : theme.palette.background.default
+      background : theme.palette.background.paper,
+      borderColor : theme.palette.primary.dark,
+      borderTop : "1px solid",
+      borderBottom : "1px solid",
+      padding : "2px",
+      "&:hover" : {
+        background : theme.palette.background.default
+      }
     }
   }),
 );
@@ -107,6 +115,20 @@ export default function Selector(props :
           setDisplayEd(d)
 
         }
+
+        const children = props_=> {
+          const { index, style } = props_;
+          const value = DisplayEd[index]
+          return (
+          <ListItem 
+            style={style}
+            onClick={(e) => {handleAdd(value)}} 
+            className={classes.ListItem}
+            >
+                {value.elem || value.name}
+            </ListItem>)
+        }
+
         const { t, i18n } = useTranslation();
 
             return(
@@ -115,12 +137,12 @@ export default function Selector(props :
                     {selected.map((value,index) => (
                       <li key={index}>
                       {props.canRemove && <Chip
-                        label={value.name}
+                        label={value.elem || value.name}
                         onDelete={()=>handleDelete(value)}
                         className={classes.chip}
                       />}
                       {!props.canRemove && <Chip
-                        label={value.name}   
+                        label={value.elem || value.name}
                         className={classes.chip}
                       />}
                     </li>  
@@ -138,7 +160,8 @@ export default function Selector(props :
                         placement="bottom"
                         open={isMenuOpen}
                         anchorEl={anchorEl}    
-                        transition                       
+                        transition
+                        style={{zIndex : 9999}}                       
                       >
                         {({ TransitionProps }) => (
                           <ClickAwayListener onClickAway={handleClickAway}>
@@ -153,17 +176,16 @@ export default function Selector(props :
                                     onChange={handleSearch}
                                     disabled={!availables[0]} />
                                     </div>
-                                    {DisplayEd[0] && <List className={classes.List}>
-                                        {DisplayEd.map((value,index) => (
-                                            <ListItem 
-                                            onClick={(e) => {handleAdd(value)}} 
-                                            key={index}
-                                            className={classes.ListItem}
-                                            >
-                                                {value.name}
-                                            </ListItem>
-                                        ))}
-                                    </List>}
+                                    {DisplayEd[0] && 
+                                    <FixedSizeList 
+                                    width="100%" 
+                                    height={290} 
+                                    itemCount={DisplayEd.length} 
+                                    className={classes.List} 
+                                    itemSize={45}
+                                    >
+                                        {children}
+                                    </FixedSizeList>}
                                 </Paper>
                             </ClickAwayListener>
                         )}

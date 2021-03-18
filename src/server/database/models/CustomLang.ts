@@ -4,8 +4,13 @@ const CustomLangSchema = new mongoose.Schema({
 
     guildID : String,
     langname : String,
-    langcode : String,
-    translations : mongoose.Schema.Types.Mixed
+    langcode: String,
+    default: {
+        type: Boolean,
+        default: false,
+    },
+    translations: mongoose.Schema.Types.Mixed,
+    forcedChannels: [String]
 
 }, {versionKey : false,strict : false})
 
@@ -13,7 +18,9 @@ export interface CustomLangDocument extends mongoose.Document {
     guildID : string,
     langname : string,
     langcode : string,
-    translation : any,
+    translation: any,
+    default: boolean,
+    forcedChannels: string[]
 }
 
 interface CustomLangInterface extends CustomLangDocument {

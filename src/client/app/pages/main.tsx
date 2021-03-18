@@ -8,7 +8,6 @@ import { useTranslation } from "react-i18next"
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button"
 import SelectServer from "../Componements/selectServer"
-import {setupListener} from "../../reducers/ChangeGuild"
 
 
 const syncDataToProps = store => {
@@ -32,7 +31,7 @@ const MainPage = props => {
 
     const {t,i18n} = useTranslation();
 
-    setupListener()
+    
         return (
            <AppBar drawer={false} >   
             <div>

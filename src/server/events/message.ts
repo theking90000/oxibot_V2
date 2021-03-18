@@ -5,13 +5,16 @@ import { permissionuser,getUser } from "../permissions"
 import {  Message } from "discord.js";
 import { getCommandData, getGuild } from "../cache/guilds";
 import { IGuildDocument } from "../database/models/guild";
+import { getLangFromMessage, langobject } from "../utils/i18n"
+import { selectUser } from "../cache/user";
 
 export interface message_ extends Message {
     userPerm? :  permissionuser,
     args? : string[],
     prefix? : string,
     guild_params? : IGuildDocument,
-    data? : any,
+    data?: any,
+    lang?: langobject
 } 
 
 const HandleGuildMessage = async (message : Message) => {
@@ -22,13 +25,18 @@ const HandleGuildMessage = async (message : Message) => {
 
     const args = message.content.slice(prefix_.length).split(' ');
     const command_ = args.shift().toLowerCase();
-
-    var msg : message_;
+    const user = selectUser(message.guild.id, message.author.id)
+    var msg: message_;
     msg = message
     msg.guild_params = guild;
     msg.args = args;
     msg.userPerm = getUser({userID : message.author.id,guildID : message.guild.id})
     msg.prefix = prefix_;
+    msg.lang = await getLangFromMessage({
+        channel: message.channel,
+        guild,
+        user: user ? user.user : null
+    })
 
     if(commands.has(command_)){
         try{

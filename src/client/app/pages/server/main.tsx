@@ -85,6 +85,7 @@ const MainPageServer = props => {
             <AppBar name={props.name} drawer={true} menu={links.map(c => {
                 return {
                     action : () => {
+                        if(store.getState().router.location.pathname !== `/guild/${props.id}${c.url}`)
                         store.dispatch(push(`/guild/${props.id}${c.url}`))
                 },
                     name : c.name,

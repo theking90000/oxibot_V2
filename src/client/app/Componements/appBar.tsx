@@ -188,7 +188,7 @@ export default function PersistentDrawerLeft(props : {
         }}
       >
         <div className={classes.drawerHeader}>
-          <Button onClick={() => store.dispatch({type : ACTIONS.SET_GUILD_NONE})} style={{marginRight : "auto"}} >
+          <Button onClick={() => store.dispatch(push('/'))} style={{marginRight : "auto"}} >
             {t('Back')}
           </Button>
           <IconButton onClick={handleDrawerClose}>

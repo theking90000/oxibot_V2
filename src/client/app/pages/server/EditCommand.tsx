@@ -1,4 +1,4 @@
-import { Grid, Switch } from "@material-ui/core"
+import { Grid, Grow, Switch } from "@material-ui/core"
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Typography from "@material-ui/core/Typography"
 import { replace } from "connected-react-router"
@@ -52,6 +52,14 @@ const EditCmd = (props: any) => {
 
     const [enabled, setEnabled] = React.useState(command.enabled)
 
+    const [fade,setFade] = React.useState(false)
+
+   React.useEffect(() => {
+       setFade(true)
+
+      return () => setFade(false)
+   }, [])
+   
     React.useEffect(() => {
         command = props.cmds.find(c => c.name === props.cmd_name)
 
@@ -75,9 +83,10 @@ const EditCmd = (props: any) => {
         setEnabled(!enabled);
 
     }
-    console.log(command)
     return (
         <div>
+            <Grow in={fade}>
+                <div>
             <Typography variant="h2" >
                 {t(`CommandName`, { cmd: command.name })}
             </Typography>
@@ -116,6 +125,8 @@ const EditCmd = (props: any) => {
                     </Grid>
                 </Grid>
             </Grid>
+            </div>
+            </Grow>
         </div>
     )
 }

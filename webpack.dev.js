@@ -10,7 +10,14 @@ module.exports = {
         rules :[
             {
                 test: /\.tsx?$/,
-                use : 'ts-loader',
+                use : [{
+                    loader: "babel-loader",
+                    options: {
+                      cacheDirectory: true,
+                      presets: [["@babel/preset-env", { targets: { node: "8" } }]]
+                    }},
+                    'ts-loader'
+                ],
                 exclude : /node_modules/
             }
         ]

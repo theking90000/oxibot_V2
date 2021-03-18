@@ -4,14 +4,14 @@ import { createMatchSelector, replace } from 'connected-react-router';
 import {Route, Switch} from "react-router-dom"
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { store } from "../../app"
-import { ACTIONS } from "../../../reducers/ChangeGuild";
+import { ACTIONS } from "../../../reducers/Translations";
 import { useTranslation } from "react-i18next";
 import  Fade  from "@material-ui/core/Fade";
-import { Button, Card, CardContent, Grid, List, Paper, TextField } from "@material-ui/core";
+import { Button, Card, CardContent, CircularProgress, Grid, Grow, List, Paper, TextField } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography"
 import LangInList from "./componements/LangInList";
 import CardActions  from "@material-ui/core/CardActions";
-import { create_remove_langage } from "../../../reducers/SyncData";
+import { create_remove_langage } from "../../../reducers/Translations";
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import EditLang from "./EditLang";
@@ -19,12 +19,16 @@ import EditLang from "./EditLang";
 
 const StoreHandler = storex => {
 
+    if(!storex.Translations.find(x => x.id === storex.ChangeGuild.guild.id)){
+      setTimeout(() => store.dispatch({type: ACTIONS.FETCH_GUILD,payload :  {guild : storex.ChangeGuild.guild.id}}))
+    }
+
     const match = createMatchSelector({ path: '/guild/:serverid/langs' })(storex)
     const match2 = createMatchSelector({ path: '/guild/:serverid/langs/:code' })(storex)
     const p :any = match2 || match
     if(!p || !storex.SyncData.guilds.find(c => c.id === storex.ChangeGuild.guild.id)) return { error : true }
-  
-    return {guild : storex.SyncData.guilds.find(c => c.id === storex.ChangeGuild.guild.id), params : p} || { error : true }
+    const _l = storex.Translations.find(x => x.id === storex.ChangeGuild.guild.id)
+    return {customslangs : (_l &&_l.translations) ? _l.translations : null ,guild : storex.SyncData.guilds.find(c => c.id === storex.ChangeGuild.guild.id), params : p} || { error : true }
   
   }
 
@@ -127,26 +131,27 @@ const StoreHandler = storex => {
         store.dispatch(await create_remove_langage({ 
           ServerID : props.guild.id,
           code : value,
-          name : props.guild.customslangs.find(x => x.code ===value).name,
+          name : props.customslangs.find(x => x.code ===value).name,
           action : "DELETE",
        })) 
         store.dispatch(replace(`/guild/${props.guild.id}/langs`))    
       }
 
-    
     const path = !props.error ? `/guild/${props.guild.id}/langs` : ""
 
     const {t,i18n} = useTranslation()
     return (
         <div>
-            <Switch>
+          {!props.customslangs && <CircularProgress />}
+            {props.customslangs && <Switch>
             <Route path={`/guild/:serverid/langs/:code`} >
-             <Fade in={fade} >
+             <Grow in={fade} >
+               <div>
               <React.Fragment>
                 <Typography style={{width : "100%"}} variant="h2" >
                   {t('EditLangTitle',{
                     langcode : props.params.params.code,
-                    langname : props.guild.customslangs.find(x => x.code === props.params.params.code) ? props.guild.customslangs.find(x => x.code === props.params.params.code).name : ""
+                    langname : props.customslangs.find(x => x.code === props.params.params.code) ? props.customslangs.find(x => x.code === props.params.params.code).name : ""
                     })}
                   <Button style={{
                     marginBottom : "auto",
@@ -159,23 +164,25 @@ const StoreHandler = storex => {
                       {t('DeleteGroupButton')}
                   </Button>
                   </Typography>
-                <EditLang  {...props} lang={props.guild.customslangs.find(x => x.code === props.params.params.code) ? props.guild.customslangs.find(x => x.code === props.params.params.code) : {}}  />
+                <EditLang  {...props} lang={props.customslangs.find(x => x.code === props.params.params.code) ? props.customslangs.find(x => x.code === props.params.params.code) : {}}  />
               </React.Fragment>
-            </Fade>
+              </div>
+            </Grow>
             </Route>
                 <Route>
-                    <Fade in={fade}>
+                    <Grow in={fade}>
+                      <div>
                         <React.Fragment>
                         <Grid container spacing={3} >
                   <Grid item xs={12}>
                     <Card >
                         <CardContent >
-                            {props.guild.customslangs.length !== 0 &&  <List>
-                              {props.guild.customslangs.map((item,index) => (
+                            {props.customslangs.length !== 0 &&  <List>
+                              {props.customslangs.map((item,index) => (
                                 <LangInList path={path} name={item.name} code={item.code} key={index} />
                               ))}
                             </List>}
-                            {props.guild.customslangs.length === 0 && <Paper >
+                            {props.customslangs.length === 0 && <Paper >
                             <Typography className={classes.ok} >{t('LangListNoLang')}</Typography>
                             </Paper>}
                         </CardContent>
@@ -217,9 +224,10 @@ const StoreHandler = storex => {
                   </Grid>
                   </Grid>
                         </React.Fragment>
-                    </Fade>
+                        </div>
+                    </Grow>
                 </Route>
-            </Switch>
+            </Switch>}
         </div>
     )
 }

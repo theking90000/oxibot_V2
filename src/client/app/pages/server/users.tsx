@@ -5,7 +5,7 @@ import { replace } from "connected-react-router"
 import User from "./componements/user"
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
-import Fade from '@material-ui/core/Fade';
+import Grow from '@material-ui/core/Grow';
 import { getPermission } from "../../../helper/permission"
 import TextField from '@material-ui/core/TextField';
 import { useTranslation } from 'react-i18next';
@@ -88,7 +88,7 @@ const UserPage = props => {
 
     return(
         <div className={classes.root}>
-            <Fade in={fade} >
+            <Grow in={fade} >
             <div className={classes.elem}>
             <div >
                 <TextField autoFocus label={t("SearchUserPlaceholder", {counter : display.length})} onChange={handleSearch} className={classes.search} />
@@ -119,7 +119,7 @@ const UserPage = props => {
                 </List>
             </div>
             </div>
-            </Fade>
+            </Grow>
         </div>
     )
 }

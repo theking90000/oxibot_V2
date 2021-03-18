@@ -4,7 +4,8 @@
 
     },
     "bot" : {
-        "GroupCommandEmbedDefaultTitle" : "Gérer les groupes"
+        "GroupCommandEmbedDefaultTitle" : "Gérer les groupes",
+        "GroupCommandEmbedDefaultList" : "{{prefix}}group list"
     },
     "web" : {
         "MainTitle" : "Accueil",
@@ -56,7 +57,8 @@
         "CreateLangCodePlaceholder" : "Entrez un code (fr-FR)",
         "CreateLangErrorCodePlaceholder" : "Code incorrect",
         "EditLangTitle" : "Modifier",
-        "SearchLangKeyTitle" : "Rechercher une clé"
+        "SearchLangKeyTitle" : "Rechercher une clé",
+        "ForcedChannelLang" : "Salon où la langue est forcée"
     },
     "doc" : {
         "permission" : {

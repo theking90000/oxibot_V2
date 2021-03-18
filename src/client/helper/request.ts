@@ -7,20 +7,30 @@ export default async function Request_Helper(data : {
      route : string,
      response? : 'json' | 'fetch' | 'blob',
      json? : boolean,
-     data : string,
+     data? : string,
      auth? : boolean,
-     method? : string
+     method? : string,
+     query? : {key:string,value:string}[],
     }) : Promise<Response | any | Blob> {
     
      const headers = {}
 
      if(data.json !== false) headers['Content-Type'] = 'application/json'
      if(data.auth !== false) headers['Authorization'] = window.localStorage.oxibotV2_token
+      const body = data.data
+
+      let query = ""
+    if(data.query){
+          query = "?"
+          for(var i =0;i < data.query.length;i++){
+                query += encodeURI(data.query[i].key + "=" + data.query[i].value + ((i+1 > data.query.length) ? "&" : ""))
+          }
+    }
 
      try{
-    const req = await fetch((data.api ? `/api/${data.route}` : data.route),{
+    const req = await fetch((data.api ? `/api/${data.route}${query}` : data.route+query),{
           headers,
-          body : data.data,
+          body,
           method : data.method ? data.method : "GET"
     })
 

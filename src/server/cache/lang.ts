@@ -1,11 +1,12 @@
 import * as nodeCache from "node-cache";
 import * as fs from "fs"
 import {defaultlocale} from "../../../config"
-import i18n from "i18next"
+import * as i18n from "../utils/i18n"
 import {join} from 'path'
 import { gray } from "chalk";
 import * as NodeCache from "node-cache"
 import CustomLang, { CustomLangDocument, ICustomLang } from "../database/models/CustomLang";
+import client from "..";
 
 const lang = new nodeCache();
 
@@ -26,16 +27,13 @@ const init = async () => {
             serverLang.set(`${lng.guildID}-${lng.langcode}`, lng)
         }  
         console.log(gray(`${files.length+customLangs.length} langues chargées dans le cache`))
-        
-        i18nInit()
+        MigrateServerLang()
+
     })
 }
 
 init()
 
-const i18nInit = () => {
-
-}
 
 export const CreateServerLang = async ({serverID,template,langname,langcode}) => {
     if(!LangExist(template)) return;
@@ -45,13 +43,30 @@ export const CreateServerLang = async ({serverID,template,langname,langcode}) =>
     const ServerLNG  = new CustomLang({
         guildID : serverID,
         langname,langcode,
-        translation : GetLang(template).bot
+        translation: GetLang(template).bot,
+        forcedChannels: []
     })
     if(await ServerLNG.save()){
-    serverLang.set(serverID,ServerLNG);
+        serverLang.set(`${serverID}-${langcode}`, ServerLNG);
     return ServerLNG.translation;
     }
     return;
+}
+
+export const MigrateServerLang = async () => {
+    var processed = 0;
+    for (const server of serverLang.keys()) {
+        const l: any = serverLang.get(server)
+        if (JSON.stringify(Object.keys(l._doc.translation)) === JSON.stringify(Object.keys(GetLang(defaultlocale).bot))) continue
+        l._doc.translation = {
+            ...GetLang(defaultlocale).bot,
+            ...l._doc.translation,
+        }
+        l.markModified("translation")
+        if (await l.save())
+            processed++
+    }
+    if (processed > 0) console.log(gray(`${processed} Langues customs migrées !`))
 }
 
 export const GetAllServersCustomLangs = async (serverID) : Promise<CustomLangDocument[]> => {
@@ -64,16 +79,59 @@ export const GetAllServersCustomLangs = async (serverID) : Promise<CustomLangDoc
     return t
 }
 
-export const DeleteServerLang =async ({serverID,langname,langcode}) : Promise<Boolean>=> {
+export const DeleteServerLang = async ({ serverID, langcode }): Promise<Boolean> => {
     if(!ServerLangExist(`${serverID}-${langcode}`)) return false;
 
-    const lng = GetServerLang(serverID,langcode);
-
+    const lng = GetServerLang(serverID, langcode);
     if(lng && await lng.delete()) {
-        serverLang.del(`${serverID}-${langcode}`)
+      serverLang.del(`${serverID}-${langcode}`) 
         return true
     }
     return false
+}
+
+export const SetKeyServerLang = async ({ serverID, langcode, key, value }): Promise<Boolean> => {
+    if (!ServerLangExist(`${serverID}-${langcode}`)) return false;
+
+    const lng: any = GetServerLang(serverID, langcode);
+    if (lng && lng._doc.translation[key]) {
+        lng._doc.translation[key] = value;
+        lng.markModified("translation")
+        if (await lng.save())
+            return true
+    }
+
+    return false;
+}
+
+export const AddForcedTranslationChannel = async ({ serverID, langcode, channel }): Promise<Boolean> => {
+    if (!ServerLangExist(`${serverID}-${langcode}`)) return false
+
+    const lng = GetServerLang(serverID, langcode);
+    if (lng && !lng.forcedChannels.find(c => c === (channel))) {
+        if (client.guilds.cache.get(serverID).channels.cache.has(channel)) {
+            lng.forcedChannels = [...lng.forcedChannels, channel]
+            if (await lng.save()) {
+                return true
+            }
+        }
+    }
+    return false
+
+}
+
+export const RemoveForcedTranslationChannel = async ({ serverID, langcode, channel }): Promise<Boolean> => {
+    if (!ServerLangExist(`${serverID}-${langcode}`)) return false
+
+    const lng = GetServerLang(serverID, langcode);
+    if (lng) {
+        lng.forcedChannels = lng.forcedChannels.filter(x => x !== channel)
+        if (await lng.save()) {
+            return true
+        }
+    }
+    return false
+
 }
 
 export const ServerLangExist = (name : string) : boolean => serverLang.has(name)

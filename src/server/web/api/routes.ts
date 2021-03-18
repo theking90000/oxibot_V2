@@ -3,7 +3,7 @@ import { checkToken } from "./discord"
 import auth from "./format/auth"
 import syncFormat from "./helper/sync"
 import { randomBytes } from "crypto"
-import { urlencoded, json}from "body-parser";
+import { urlencoded, json }from "body-parser";
 import { addUserWeb,selectUser,isUserExist,updateUserToken } from "../../cache/userweb"
 import userRouter from "./user"
 import GroupRouter from "./group"
@@ -13,6 +13,8 @@ import CommandRouter from "./command"
 import LangRouter from "./lang"
 import { defaultlocale } from "../../../../config"
 import { getAllLang } from "../../cache/lang"
+import { channelsRoute } from "./helper/channels";
+import langs from "./helper/langs";
 
 const router = express.Router();
 
@@ -119,6 +121,36 @@ router.use(json())
     }
 
    })
+
+   router.get('/sync/channels' , async (req,res,next) => {
+     if(req.query && req.query.type){
+        try{
+          setTimeout(() => {
+            return channelsRoute(req,res)
+          },1500)
+          
+        }catch{
+          return res.status(500).json({success : false})
+        }
+     }else{
+       return res.status(400).json({success : false})
+     }
+   })
+
+   router.get('/sync/customlangs' , async (req,res,next) => {
+    if(req.query && req.query.type){
+       try{
+         setTimeout(() => {
+           return langs(req,res)
+         },1500)
+         
+       }catch{
+         return res.status(500).json({success : false})
+       }
+    }else{
+      return res.status(400).json({success : false})
+    }
+  })
 
    /**
     * @name /user/*

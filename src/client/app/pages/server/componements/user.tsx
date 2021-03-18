@@ -74,17 +74,20 @@ export default function UserC(props : { perms: string[],pseudo? : string,name : 
             }))
         }
       }
-      const [url,setUrl] = React.useState(props.url.split('?')[0].endsWith('.gif') ? 
-        props.url.replace(".gif",".jpg") : props.url
+
+      const __url = props.url ? props.url.replace('size=128', "size=64") : ""
+
+      const [url,setUrl] = React.useState(__url.split('?')[0].endsWith('.gif') ? 
+        __url.replace(".gif",".webp") : __url
       )
 
       const handleEnter = () =>{
-        setUrl(props.url)
+        setUrl(__url)
       }
 
       const handleLeave = () => {
-        setUrl(props.url.split('?')[0].endsWith('.gif') ? 
-        props.url.replace(".gif",".jpg") : props.url)
+        setUrl(__url.split('?')[0].endsWith('.gif') ? 
+        __url.replace(".gif",".webp") : __url)
       }
 
       

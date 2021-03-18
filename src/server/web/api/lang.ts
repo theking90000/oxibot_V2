@@ -1,5 +1,5 @@
 import * as Express from "express"
-import { CreateServerLang, DeleteServerLang } from "../../cache/lang";
+import { AddForcedTranslationChannel, CreateServerLang, DeleteServerLang, RemoveForcedTranslationChannel, SetKeyServerLang } from "../../cache/lang";
 import { defaultlocale } from "../../../../config"
 
 const router = Express.Router();
@@ -18,8 +18,7 @@ router.use( (req,res,next) => {
 })
 
 router.post('/', async (req,res,next) => {
-    if( req.body.langcode && req.body.langname &&req.body.action){
-
+    if (req.body.langcode && req.body.langname && req.body.action) {
         switch(req.body.action){
             case "CREATE" : {
                 try{
@@ -42,10 +41,9 @@ router.post('/', async (req,res,next) => {
             }
             case "DELETE" : {
                     try{
-                    if(req.body.langname.match(/^[a-z-A-Z-0-9]{1,15}$/) && req.body.langcode.match(/^[a-z]{2}-[A-Z]{2}$/) ){
+                        if (req.body.langcode) {
                         if(await DeleteServerLang({
-                            langcode : req.body.langcode,
-                            langname : req.body.langname,
+                            langcode: req.body.langcode,
                             serverID : req.body.guild,
                         }))
                         return res.status(200).json({success: true})
@@ -66,8 +64,46 @@ router.post('/', async (req,res,next) => {
     }
 })
 
-router.put("/", (req,res,next) => {
-    
+router.put("/", async (req, res, next) => {
+    try {
+        if (req.body.langcode && req.body.key && req.body.value && req.body.value !== "") {
+            if (await SetKeyServerLang({
+                key: req.body.key,
+                langcode: req.body.langcode,
+                serverID: req.body.guild,
+                value: req.body.value
+            })) return res.status(200).json({ success: true })
+            else return res.status(400).json({ success: false })
+
+        }
+    } catch {
+        return res.status(500).json({ success: false })
+    }
 } )
+
+router.put('/channels', async (req, res, next) => {
+    try {
+        if (req.body.langcode && req.body.channel && req.body.type === "ADD") {
+            if (await AddForcedTranslationChannel({
+                channel: req.body.channel,
+                langcode: req.body.langcode,
+                serverID: req.body.guild,
+            })) return res.status(200).json({ success: true })
+            else return res.status(400).json({ success: false })
+
+        }
+        if (req.body.langcode && req.body.channel && req.body.type === "REMOVE") {
+            if (await RemoveForcedTranslationChannel({
+                channel: req.body.channel,
+                langcode: req.body.langcode,
+                serverID: req.body.guild,
+            })) return res.status(200).json({ success: true })
+            else return res.status(400).json({ success: false })
+        }
+        return res.status(400).json({ success: false })
+    } catch {
+        return res.status(500).json({ success: false })
+    }
+})
 
 export default router;

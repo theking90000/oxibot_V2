@@ -2,7 +2,7 @@ import * as React from "react"
 import { connect } from 'react-redux'
 import { store } from "../../app"
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import Fade from '@material-ui/core/Fade';
+import Grow from '@material-ui/core/Grow';
 import { Switch, Route, Link,} from "react-router-dom";
 import  Button  from "@material-ui/core/Button";
 import { push, replace } from "connected-react-router";
@@ -52,6 +52,11 @@ const GroupsPage = props => {
     return(
       <div>ERROR</div>
     )
+  }
+  if(props.params.params.groupname){
+    if(!props.guild.groups.find(c => c.name === props.params.params.groupname)){
+      setTimeout(()=>store.dispatch(replace(`/guild/${props.guild.id}/groups`)));console.log("error")
+    }
   }
     const classes = useStyles()
 
@@ -112,7 +117,7 @@ const GroupsPage = props => {
         <div>
           <Switch>
           <Route path={`/guild/:serverid/groups/edit/:groupname`} >
-            <Fade in={fade} >
+            <Grow in={fade} >
               <React.Fragment>
                 <Typography variant="h2" >
                   {t('EditGroupTitle',{groupname : props.params.params.groupname})}
@@ -122,10 +127,10 @@ const GroupsPage = props => {
                   </Typography>
                 <EditGroup  {...props} group={props.params.params.groupname} /*group={props.params.params.groupname}*/ />
               </React.Fragment>
-            </Fade>
+            </Grow>
             </Route>
             <Route >
-            <Fade in={fade} >
+            <Grow in={fade} >
                 <Grid container spacing={3} >
                   <Grid item xs={12}>
                     <Card >
@@ -162,7 +167,7 @@ const GroupsPage = props => {
                     </Card>
                   </Grid>
                 </Grid>
-            </Fade>
+            </Grow>
             </Route>
             
           </Switch>

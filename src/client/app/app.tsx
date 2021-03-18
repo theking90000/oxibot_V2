@@ -9,6 +9,8 @@ import Login from "./pages/login"
 import start from "../main"
 import MainPage from "./pages/main";
 import MainServerPage from "./pages/server/main"
+import {setupListener} from "../reducers/ChangeGuild"
+
 
 export const THEME = createMuiTheme({
   palette : {
@@ -27,7 +29,7 @@ export default function App() {
     width : "100%",
     height : "100%"
   }
-
+  setupListener()
   React.useEffect(() =>{
     start()
   })
