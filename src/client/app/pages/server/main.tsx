@@ -70,13 +70,12 @@ const MainPageServer = props => {
             return c;
         }
     })
-    console.log(props)
     const CmdList = []
 
     for(const cmds of props.cmds){
         CmdList.push({
-            name : cmds.name,
-            url : `/commands/${cmds.name}`,
+            name : cmds,
+            url : `/commands/${cmds}`,
         })
     }
 

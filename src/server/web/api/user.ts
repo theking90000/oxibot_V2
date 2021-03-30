@@ -14,7 +14,7 @@ namespace Express {
 const router = express.Router();
 
 
-router.use(bodyParser.json())
+
 
     router.use( (req,res,next) => {
         if(req.body && req.body.guild && req.body.user){

@@ -44,6 +44,8 @@ const GuildSchema = new mongoose.Schema({
             }
         }
     }
+},{
+    versionKey : false
 })
 
 export interface commandBaseSettings  {
@@ -53,6 +55,8 @@ export interface commandBaseSettings  {
         settings : {
             canBeDisabled? : boolean,
             data : any,
+            canHasAliases? : boolean,
+            Aliases? : string[]
         }
     },
     name : string,

@@ -50,7 +50,7 @@ export const PLACEHOLDERS = {
         "uptime" : (c : g) => toHHMMSS(process.uptime())
     }
 
-function toHHMMSS(str) {
+export function toHHMMSS(str) {
     var sec_num = parseInt(str, 10); // don't forget the second param
     var hours :any  = Math.floor(sec_num / 3600);
     var minutes:any = Math.floor((sec_num - (hours * 3600)) / 60);

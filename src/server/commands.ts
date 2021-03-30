@@ -26,6 +26,8 @@ export type commandType = {
     execute : (message : message_) => void,
     settings? : {
         canBeDisabled? : boolean,
+        canHasAliases? : boolean,
+        Aliases? : string[]
         data : any
     }
 

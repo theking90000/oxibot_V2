@@ -16,6 +16,8 @@ const UserSchema : mongoose.Schema = new mongoose.Schema({
         type: String,
         required: false,
     }
+},{
+    versionKey : false
 })
 
 export interface IUsersDocument extends mongoose.Document{

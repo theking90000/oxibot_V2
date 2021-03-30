@@ -1,6 +1,7 @@
 import * as Express from "express"
-import { AddForcedTranslationChannel, CreateServerLang, DeleteServerLang, RemoveForcedTranslationChannel, SetKeyServerLang } from "../../cache/lang";
+import { AddForcedTranslationChannel, CreateServerLang, DeleteServerLang, RemoveForcedTranslationChannel, SetDefaultLang, SetKeyServerLang } from "../../cache/lang";
 import { defaultlocale } from "../../../../config"
+import validtext from "../../utils/validtext";
 
 const router = Express.Router();
 
@@ -71,7 +72,7 @@ router.put("/", async (req, res, next) => {
                 key: req.body.key,
                 langcode: req.body.langcode,
                 serverID: req.body.guild,
-                value: req.body.value
+                value: validtext( req.body.value )
             })) return res.status(200).json({ success: true })
             else return res.status(400).json({ success: false })
 
@@ -99,6 +100,22 @@ router.put('/channels', async (req, res, next) => {
                 serverID: req.body.guild,
             })) return res.status(200).json({ success: true })
             else return res.status(400).json({ success: false })
+        }
+        return res.status(400).json({ success: false })
+    } catch {
+        return res.status(500).json({ success: false })
+    }
+})
+
+router.put('/default', async (req, res, next) => {
+    try {
+        if (req.body.langcode) {
+            if (await SetDefaultLang({
+                langcode: req.body.langcode,
+                serverID: req.body.guild,
+            })) return res.status(200).json({ success: true })
+            else return res.status(400).json({ success: false })
+
         }
         return res.status(400).json({ success: false })
     } catch {

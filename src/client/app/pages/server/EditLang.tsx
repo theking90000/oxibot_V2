@@ -85,6 +85,13 @@ const __elem = (props: any) => {
     const row = (props_) => {
         const { index, style } = props_
 
+        const [isMounted, setIsMounted] = React.useState(false)
+
+        React.useEffect(() => {
+          setIsMounted(true)
+          return () => setIsMounted(false)
+        }, [])
+
         const item = Displayed[index]
 
         const [Value,setValue] = React.useState(item.value)
@@ -104,7 +111,7 @@ const __elem = (props: any) => {
                 value: val,
                 code: props.lang.code
             }))
-            SetLoading(false)
+            if (isMounted) SetLoading(false)
         }
 
         const HandleChange = (e) => {

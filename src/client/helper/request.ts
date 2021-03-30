@@ -22,8 +22,9 @@ export default async function Request_Helper(data : {
       let query = ""
     if(data.query){
           query = "?"
-          for(var i =0;i < data.query.length;i++){
-                query += encodeURI(data.query[i].key + "=" + data.query[i].value + ((i+1 > data.query.length) ? "&" : ""))
+          for (var i = 0; i < data.query.length; i++){
+                if(data.query[i].key !== "")
+                query += encodeURI(data.query[i].key + "=" + data.query[i].value + ((i+1 < data.query.length) ? "&" : ""))
           }
     }
 

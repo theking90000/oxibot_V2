@@ -56,7 +56,7 @@ export default function embed(e : embed_) : emreturn{
         getEmbed : () => m,
         addFields : (fields) => {
             fields.forEach(c => {
-                m.addField(c.val1, c.val2 ? c.val2 : `\u200B`,c.inline );
+                m.addField(c.val1, c.val2 ? c.val2 : `\u200B`, c.inline);
             })
             return this;
         }

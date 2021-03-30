@@ -19,6 +19,8 @@ const GroupSchema : mongoose.Schema = new mongoose.Schema({
             required : true,
         }
     }]
+},{
+    versionKey : false,
 })
 
 export interface IgroupDocument extends mongoose.Document{

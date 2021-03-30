@@ -15,6 +15,7 @@ import { defaultlocale } from "../../../../config"
 import { getAllLang } from "../../cache/lang"
 import { channelsRoute } from "./helper/channels";
 import langs from "./helper/langs";
+import commands from "./helper/commands";
 
 const router = express.Router();
 
@@ -152,7 +153,22 @@ router.use(json())
     }
   })
 
-   /**
+router.get('/sync/commands', async (req, res, next) => {
+  if(req.query && req.query.type){
+    try{
+      setTimeout(() => {
+        return commands(req,res)
+      },1500)
+      
+    }catch{
+      return res.status(500).json({success : false})
+    }
+ }else{
+   return res.status(400).json({success : false})
+ }
+})
+
+  /**
     * @name /user/*
     * 
     */

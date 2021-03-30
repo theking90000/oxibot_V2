@@ -40,5 +40,20 @@ router.put('/data', async (req,res,next) => {
             return res.status(400).json({success : false})
         }
 })
+router.put('/aliases', async (req,res,next) => {
+    try{
+    if(req.body.name && req.body.type && req.body.data){
+        if(await GuildCache.AddRemoveCommandAliases({data : req.body.data, id : req.body.guild,name : req.body.name,type : req.body.type})){
+            return res.status(200).json({success : true})
+           }else{
+            return res.status(400).json({success : false})
+           }
+        }else{
+            return res.status(400).json({success : false})
+        }
+    }catch(e){
+        return res.status(500).json({success : false})
+    }
+})
 
 export default router;

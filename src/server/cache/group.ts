@@ -1,6 +1,7 @@
 import { gray } from "chalk";
 import * as nodeCache from "node-cache";
 import Group, {IgroupDocument} from "../database/models/groups";
+import { IUsersDocument } from "../database/models/user";
 import * as UserCache from "./user"
 const groups = new nodeCache();
 
@@ -93,6 +94,28 @@ export const setPermission = async (group : { name : string,guildID : string }, 
     
 } 
 
+export const getGroupsUsers  = (guildID : string): {[groupname : string] : {members : IUsersDocument[]}} =>{
+    const groups = getGroups(guildID);
+   const users =  UserCache.getUsers(guildID);
+   const g : {
+       [groupname : string] : {
+           members : IUsersDocument[];
+       } 
+   } = {}
+   for(const group of groups){
+       g[group.name] = {members : []}
+   }
+
+   for(const user of users){
+        for(const group of user.Groups){
+            if(groups.find(x => x.name === group)){
+                g[group].members.push(user);
+            }
+        }
+   }
+
+   return g;
+}
 
 updateCache();
 

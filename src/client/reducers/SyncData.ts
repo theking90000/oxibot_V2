@@ -53,7 +53,7 @@ export const DeleteGroup = async (obj : { group : string,ServerID : string }) =>
  return { type : ACTIONS.DELETE_GROUP,payload : obj }
 }
 
-export const SetCommandEnabled = async (obj : {ServerID : string,value : boolean,name : string}) => {
+/**export const SetCommandEnabled = async (obj : {ServerID : string,value : boolean,name : string}) => {
   await Request_Helper({
     data : JSON.stringify({
       guild : obj.ServerID,
@@ -67,7 +67,7 @@ export const SetCommandEnabled = async (obj : {ServerID : string,value : boolean
   })
 
   return { type : ACTIONS.DISABLE_COMMAND,payload: obj}
-}
+}*/
 
 export const update_settings_value = async (payload : { ServerID : string,cat : string,name : string,value : any }) => {
 
@@ -87,7 +87,7 @@ export const update_settings_value = async (payload : { ServerID : string,cat : 
  return {type : ACTIONS.UPDATE_SETTINGS_VALUE , payload}
 }
 
-export const set_command_setting = async (payload : { ServerID : string,name : string,setting : string,value : any }) => {
+/**export const set_command_setting = async (payload : { ServerID : string,name : string,setting : string,value : any }) => {
 
   await Request_Helper({ 
     data : JSON.stringify({
@@ -104,7 +104,7 @@ export const set_command_setting = async (payload : { ServerID : string,name : s
 
  return {type: ACTIONS.SET_COMMAND_SETTING, payload}
 
-}
+}*/
 
 export const ACTIONS = {
     REPLACE_DATA : "@SyncManager:REPLACE_DATA",
@@ -205,7 +205,7 @@ export default function SyncManager(state = SyncManager_initialState, action) {
     })
     }
 
-    case ACTIONS.DISABLE_COMMAND : {
+    /**case ACTIONS.DISABLE_COMMAND : {
       state.guilds = state.guilds.map(guild => {
         if(guild.id=== action.payload.ServerID){
           guild.cmds= guild.cmds.map(cmd => {
@@ -231,7 +231,7 @@ export default function SyncManager(state = SyncManager_initialState, action) {
         }
       }
       return state
-    }
+    }*/
 
       default:
         

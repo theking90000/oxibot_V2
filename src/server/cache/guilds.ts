@@ -174,6 +174,16 @@ export const getCommandData = async (guildid : string, commandname : string) => 
     return guild.commands.find(c => c.name === commandname)
 }
 
+export const getCommandsWithAliases = (guildid : string,cmd : string) : string => {
+    const guild = getGuild(guildid)
+    if(!guild) return; 
+
+    if(guild.commands.find(x => x.settings.settings.Aliases && x.settings.settings.Aliases.find(b => b === cmd))){
+        return guild.commands.find(x => x.settings.settings.Aliases && x.settings.settings.Aliases.find(b => b === cmd)).name
+    }
+    return;
+}
+
 export const setCommandData = async (info : {name : string,setting : string,value : boolean,id : string}) : Promise<boolean> => {
     const guild = getGuild(info.id)
     if(!guild) return false;
@@ -195,6 +205,41 @@ export const setCommandData = async (info : {name : string,setting : string,valu
     
 
     return false
+}
+
+export const AddRemoveCommandAliases =async (payload : { 
+    type : "ADD" | "REMOVE", 
+    id: string,
+    name : string,
+    data : string | string[]
+})=>{
+    const guild = getGuild(payload.id)
+    if(!guild) return false;
+    if(!guild.commands || !guild.commands.find(c => c.name === payload.name)) return false;
+    const cmd = guild.commands.find(c => c.name === payload.name)
+    if(!cmd.settings.settings.canHasAliases) return false;
+    var v = false
+    if(payload.type === "ADD"){
+        if(Array.isArray(payload.data)) cmd.settings.settings.Aliases = [...cmd.settings.settings.Aliases,...payload.data]
+        else if (!cmd.settings.settings.Aliases.find(x => x === payload.data)) 
+        cmd.settings.settings.Aliases.push(payload.data)
+        v = true;
+    }
+    if(payload.type === "REMOVE"){
+        
+        cmd.settings.settings.Aliases = cmd.settings.settings.Aliases.filter(x => x !== payload.data);
+        
+        v = true
+    }
+
+    if(v){
+    guild.markModified('commands')
+    if( await guild.save()){
+        return v;
+    }
+    
+}
+return false;
 }
 
 export const setGuild = async (id : string,callback : (obj : IGuildDocument) => IGuildDocument) => {

@@ -10,7 +10,7 @@ const CustomTranslation = new Map<string, Map<string, string>>();
 
 
 export type langobject = {
-    t(key: string, params?: { [key: string]: string }): string,
+    t(key: string, params?: { [key: string]: string | number }): string,
     readonly lang: { [key: string]: string }
 }
 
@@ -55,6 +55,7 @@ export const getLangFromMessage = async (info: {
                     }
                 }
                 text = text.replace(/<br>/g, "\n").replace(/\\n/g, "\n")
+                if(text === "") text = key
                 return parsePlaceHolder({
                     text: text.replace(/{{\w*}}/, ""),
                     guildID: info.guild ? info.guild.guildID : null,

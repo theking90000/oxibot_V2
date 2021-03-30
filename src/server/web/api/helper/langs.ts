@@ -13,7 +13,8 @@ if(!req.user.guilds.has(req.query.type as string)) return res.status(400).json({
             const _c : any = c
             return {
                     code : c.langcode,
-                    name : c.langname,
+                name: c.langname,
+                default: c.default,
                     forcedChannels : c.forcedChannels,
                     translations : _c._doc.translation,
             }

@@ -7,6 +7,8 @@ import { connectdb } from "./database/database";
 import { blue, blueBright, red, redBright } from "chalk"
 import web from "./web/app";
 
+export const version = "0.1"
+
 const client = new Client({
     ws: { compress: true },
     shards: "auto",
@@ -21,8 +23,6 @@ const client = new Client({
     });
     console.log(blueBright(`Connecté a la base de données ! (${mongodb.host})`));
 })().then(() => {
-
-    
 
     client.login(token)
 

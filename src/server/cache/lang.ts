@@ -134,6 +134,26 @@ export const RemoveForcedTranslationChannel = async ({ serverID, langcode, chann
 
 }
 
+export const SetDefaultLang = async ({ serverID, langcode }): Promise<Boolean> => {
+    const langs = await GetAllServersCustomLangs(serverID)
+    var p = false
+    for (const x of langs) {
+        if (x.default && x.langcode !== langcode) {
+            x.default = false;
+            await x.save()
+        }
+        if (!x.default && x.langcode === langcode) {
+            x.default = true;
+            await x.save()
+            p = true
+        }
+
+    }
+
+    return p
+
+}
+
 export const ServerLangExist = (name : string) : boolean => serverLang.has(name)
 
 export const GetServerLang = (guildID : string,code : string) : CustomLangDocument => serverLang.get(`${guildID}-${code}`)

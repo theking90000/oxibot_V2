@@ -26,10 +26,10 @@ export const AutoDetectGuild = (path : string) => {
   if(!path.startsWith('/guild/')){
     store.dispatch({type : ACTIONS.SET_GUILD_NONE,payload : {nochange : true}})
   }
-  if(path.startsWith("/guild")){
+  if(path.startsWith("/guild/")){
     const id :string[] = path.split('/')
-    if(id && id[2]&& id[2] !== store.getState().ChangeGuild.guild.id){
-        store.dispatch({type : ACTIONS.SET_CURRENT_GUILD, payload : {id : id[2] , nochange : true}})
+    if (id && id[2] && id[2] !== store.getState().ChangeGuild.guild.id) {
+        store.dispatch({type : ACTIONS.SET_CURRENT_GUILD, payload : {id : id[2] ,url : path, nochange : path.endsWith('/')}})
     }
   }
 }
@@ -40,7 +40,8 @@ export default function ChangeGuild(state = SyncManager_initialState, action) {
         state = {guild : { id  :  action.payload.id }}
         if(!action.payload.nochange)
         setTimeout(() => { 
-          const path = action.payload.url.replace(/[0-9]{18}/, action.payload.id)
+          var path : string= action.payload.url.replace(/[0-9]{18}/, action.payload.id)
+          path += path.endsWith('/') ? "" : "/"
           console.log(path)
           store.dispatch(push(path.startsWith(`/guild/`) ? path : `/guild/${action.payload.id}/`))
         })

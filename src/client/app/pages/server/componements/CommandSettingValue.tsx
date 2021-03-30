@@ -6,7 +6,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import Typography from "@material-ui/core/Typography"
 import { Switch } from "@material-ui/core";
 import { store } from "../../../app";
-import { set_command_setting } from "../../../../reducers/SyncData";
+import { set_command_setting } from "../../../../reducers/Commands";
 
 export default props => {
 

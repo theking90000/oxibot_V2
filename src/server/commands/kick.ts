@@ -8,6 +8,8 @@ const command :commandType = {
     name : "kick",
     settings : {
         canBeDisabled : true,
+        canHasAliases : true,
+        Aliases : ["k"],
         data : {
             DefaultTempKick : {
                 type : 'boolean',
@@ -32,11 +34,13 @@ const command :commandType = {
 
         if(!message.args[0] && message.userPerm.hasPermission('command.kick')){
             await message.channel.send(embed({
-                name : "Exclure une personne",
+                name: message.lang.t('KickCommandEmbedDefaultTitle'),
                 guildid : message.guild.id,
                     fields : [
                     {
-                        val1 : `${message.prefix}kick @user @user <reason>`,
+                            val1: message.lang.t('KickCommandEmbedDefaultKick', {
+                                prefix: message.prefix,
+                            }),
                         val2 : "Exclu une personne du serveur\n(permission : command.kick.user)",
                     },
                 ]

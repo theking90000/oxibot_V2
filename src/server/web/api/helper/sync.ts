@@ -37,7 +37,7 @@ type syncObjGuild = {
         users? : BasicUser[]
         count : number,
     },
-    cmds? : commandBaseSettings[],
+    cmds? : string[],
     groups : groups[],
     settings? : setting[],
     availableslangs : string[],
@@ -143,15 +143,11 @@ export default async function (user: ActionUserWeb) : Promise<syncObjD> {
             })
             
         }
-        let cmds : commandBaseSettings[];
+        let cmds : string[];
         if(getUsr.permission.hasPermission('panel.commands.see')){
             const guild_b = getGuild(guild.Guild.id)
             if(guild_b)
-            cmds = guild_b.commands.map(x => ({
-                enabled : x.enabled,
-                name : x.name,
-                settings : x.settings,
-            }))
+            cmds = guild_b.commands.map(x => (x.name))
         }
 
         

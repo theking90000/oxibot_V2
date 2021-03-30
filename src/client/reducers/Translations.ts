@@ -9,13 +9,16 @@ export const ACTIONS = {
   UPDATE_CHANNELS: "@Translations:UPDATE_CHANNELS",
   CREATE_REMOVE_LANGAGE: "@Translations:CREATE_REMOVE_LANGAGE",
   SET_CUSTOM_LANG_VALUE: "@Translations:SET_CUSTOM_LANG_VALUE",
-  ADD_REMOVE_FORCEDCHANNELS: "@Translations:ADD_REMOVE_FORCEDCHANNELS"
+  ADD_REMOVE_FORCEDCHANNELS: "@Translations:ADD_REMOVE_FORCEDCHANNELS",
+  SET_DEFAULT_LANG: "@Translations:SET_DEFAULT_LANG"
 }
 const ACTIONS_ = {
   SET_DATA: "@Translations:SET_DATA"
 }
-
+var isFetching = false;
 const fetch_data = async (data_: "ALL" | string) => {
+  if (isFetching) return;
+  isFetching = true;
   const res = await Request_Helper({
     api: true,
     route: "sync/customlangs",
@@ -26,8 +29,9 @@ const fetch_data = async (data_: "ALL" | string) => {
       value: data_,
     }]
   }) as any
-  if (res.success)
+  if (res.success) 
     store.dispatch({ type: ACTIONS_.SET_DATA, payload: { data: res.data, guild: data_ } })
+  
 }
 
 export const update_channels = async (type, data: { ServerID, channel, code }) => {
@@ -126,12 +130,36 @@ export const add_remove_forcedchannels = async (payload: {
 
 }
 
+export const set_default_lang = async (payload: {
+  ServerID: string,
+  code: string
+}) => {
+  const res = await Request_Helper({
+    data: JSON.stringify({
+      guild: payload.ServerID,
+      langcode: payload.code,
+    }),
+    api: true,
+    route: "lang/default",
+    method: "PUT",
+    response: "json",
+  }) as any
+
+  if (!res.success)
+    return { type: "null", payload: {} }
+
+  return { type: ACTIONS.SET_DEFAULT_LANG, payload, }
+
+}
+
 export default function (state = Translations_IntialState, action) {
   switch (action.type) {
     case ACTIONS.FETCH_GUILD: {
+      console.log('fetch_requested')
       fetch_data(action.payload.guild || "ALL")
     }
     case ACTIONS_.SET_DATA: {
+      isFetching = false;
       if (action.payload.data && action.payload.guild) {
         if (action.payload.guild === "ALL") {
           state = action.payload.data
@@ -205,6 +233,20 @@ export default function (state = Translations_IntialState, action) {
         }
       }
       return state;
+    }
+    case ACTIONS.SET_DEFAULT_LANG: {
+      const _guild = state.find(x => x.id === action.payload.ServerID)
+      if (_guild) {
+        _guild.translations = _guild.translations.map(value => {
+          value.default = false
+          if (value.code === action.payload.code) {
+            value.default = true
+          }
+          return value
+        })
+      }
+      console.dir(_guild)
+      return state
     }
 
     default: {

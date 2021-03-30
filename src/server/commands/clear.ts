@@ -25,20 +25,32 @@ const command : commandType = {
 
         if(!message.args[0] && message.userPerm.hasPermission('command.clear')){
             message.channel.send(embed({
-                name : "Clear un channel",
-                guildid : message.guild.id,
-                    fields : [
+                name: message.lang.t('ClearCommandEmbedDefaultTitle'),
+                guildid: message.guild.id,
+                fields: [
                     {
-                        val1 : `${message.prefix}clear [0-100]`,
-                        val2 : "Clear de 0 à 100 messages dans un channel\n(permission : command.clear)",
+                        val1: message.lang.t('ClearCommandEmbedDefaultClear', {
+                            prefix: message.prefix,
+                        }),
+                        val2: message.lang.t('ClearCommandEmbedDefaulClearDescription', {
+                            permission: "command.clear"
+                        }),
                     },
                     {
-                        val1 : `${message.prefix}clear duplicate`,
-                        val2 : "Clear les messages dupliqué (limite de 100 messages)\n(permission : command.clear.duplicate)",
+                        val1: message.lang.t(`ClearCommandEmbedDefaultDuplicate`, {
+                            prefix: message.prefix,
+                        }),
+                        val2: message.lang.t(`ClearCommandEmbedDefaultDuplicateDescription`, {
+                            permission: "command.clear.duplicate"
+                        }),
                     },
                     {
-                        val1 : `${message.prefix}clear channel`,
-                        val2 : "Supprime le channel et le récrée a nouveau\n(permission : command.clear.channel)",
+                        val1: message.lang.t(`ClearCommandEmbedDefaultChannel`, {
+                            prefix: message.prefix,
+                        }),
+                        val2: message.lang.t(`ClearCommandEmbedDefaultChannelDescription`, {
+                            permission: "command.clear.channel"
+                        }),
                     }
                 ]
             }).getEmbed())
@@ -70,7 +82,11 @@ const command : commandType = {
                     
                     const channel = message.channel as TextChannel;
                     const position = channel.position
-                    const new_ch = await channel.clone({reason : `${message.author.tag} cleared channel`})
+                    const new_ch = await channel.clone({
+                        reason: message.lang.t('ClearCommandDuplicateChannelLogsReason', {
+                            user: message.author.tag,
+                        })
+                    })
 
                     if(message.data.logChannelEnabled.value === true){
                         var cat : CategoryChannel
@@ -86,7 +102,9 @@ const command : commandType = {
                         await channel.setParent(cat)
                         await channel.createOverwrite(message.guild.roles.everyone,{ VIEW_CHANNEL : false,})
                     }else{
-                        await message.channel.delete();
+                        await message.channel.delete(message.lang.t('ClearCommandDeleteChannelLogsReason', {
+                            user: message.author.tag,
+                        }));
                     }
 
                     await new_ch.setPosition(position);
@@ -99,12 +117,15 @@ const command : commandType = {
 
                     if(!n){
                         message.channel.send(embed({
-                            name : `Une erreur est survenue !`,
+                            name: message.lang.t('EmbedErrorDefaultTitle'),
                             guildid : message.guild.id,
                             fields :  [
                                 {
-                                    val2 : `Veuillez inclure un nombre`,
-                                    val1 : `Erreur ! `
+                                    val2: message.lang.t('EmbedErrorMessageDefault'),
+                                    val1: message.lang.t('ClearCommandEmbedErrorNotNumber', {
+                                        user: `<@${message.author.id}>`,
+                                        tag: message.author.tag,
+                                    })
                                 }
                             ]
                         }).getEmbed())
@@ -114,12 +135,15 @@ const command : commandType = {
 
                     if(n < 0 || n > 100){
                         message.channel.send(embed({
-                            name : `Une erreur est survenue !`,
-                            guildid : message.guild.id,
-                            fields :  [
+                            name: message.lang.t('EmbedErrorDefaultTitle'),
+                            guildid: message.guild.id,
+                            fields: [
                                 {
-                                    val2 : `Veuillez inclure un nombre entre 1 et 100 !`,
-                                    val1 : `Erreur ! `
+                                    val2: message.lang.t('EmbedErrorMessageDefault'),
+                                    val1: message.lang.t('ClearCommandEmbedErrorNotValidNumber', {
+                                        user: `<@${message.author.id}>`,
+                                        tag: message.author.tag,
+                                    })
                                 }
                             ]
                         }).getEmbed())

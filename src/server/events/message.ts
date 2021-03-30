@@ -3,7 +3,7 @@ import {prefix} from "../../../config"
 import commands from "../commands"
 import { permissionuser,getUser } from "../permissions"
 import {  Message } from "discord.js";
-import { getCommandData, getGuild } from "../cache/guilds";
+import { getCommandData, getCommandsWithAliases, getGuild } from "../cache/guilds";
 import { IGuildDocument } from "../database/models/guild";
 import { getLangFromMessage, langobject } from "../utils/i18n"
 import { selectUser } from "../cache/user";
@@ -24,7 +24,7 @@ const HandleGuildMessage = async (message : Message) => {
     if(!message.content.startsWith(prefix_)) return
 
     const args = message.content.slice(prefix_.length).split(' ');
-    const command_ = args.shift().toLowerCase();
+    var command_ = args.shift().toLowerCase();
     const user = selectUser(message.guild.id, message.author.id)
     var msg: message_;
     msg = message
@@ -37,7 +37,10 @@ const HandleGuildMessage = async (message : Message) => {
         guild,
         user: user ? user.user : null
     })
-
+    const al = getCommandsWithAliases(message.guild.id,command_)
+    if(al && !commands.has(command_)){
+        command_ = al
+    }
     if(commands.has(command_)){
         try{
             const data = await getCommandData(message.guild.id,command_);
