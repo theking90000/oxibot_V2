@@ -10,12 +10,17 @@ import GroupRouter from "./group"
 import DocRouter from "./doc"
 import GuildRouter from "./guild"
 import CommandRouter from "./command"
+import ModuleRouter from "./modules"
 import LangRouter from "./lang"
 import { defaultlocale } from "../../../../config"
 import { getAllLang } from "../../cache/lang"
 import { channelsRoute } from "./helper/channels";
 import langs from "./helper/langs";
 import commands from "./helper/commands";
+import modules from "./helper/modules";
+import { Module } from "../../modules/module";
+import { Modules } from "../../modules/ModuleManager";
+import roles from "./helper/roles";
 
 const router = express.Router();
 
@@ -33,7 +38,6 @@ router.use(json())
     if(!err){
       
       const useri = await checkToken(req.body.token)
-      console.log(useri)
       if(!useri) return res.status(400).json({success : false})
 
       const token = randomBytes(256).toString('base64')
@@ -81,6 +85,20 @@ router.use(json())
    router.get('/test',(req,res,next) => {
      res.send('eaz')
    })
+
+   /**
+    * BEFORE AUTHENTIFICATION
+    * 
+    */
+
+    function createRoutesModules(modules : Module[]){
+      for(const module of modules){
+          if(module.routes){
+              router.use(`/module/${module.getName()}`,module.getRoutes());
+          }
+      }
+  }
+  createRoutesModules(Modules)
 
   /**
    * @name /sync
@@ -168,6 +186,35 @@ router.get('/sync/commands', async (req, res, next) => {
  }
 })
 
+router.get("/sync/modules" , async (req,res,next) => {
+  if(req.query && req.query.type){
+    try{
+      setTimeout(() => {
+        return modules(req,res)
+      },1500)
+      
+    }catch{
+      return res.status(500).json({success : false})
+    }
+ }else{
+   return res.status(400).json({success : false})
+ }
+})
+
+router.get("/sync/roles" , async (req,res,next) => {
+  if(req.query && req.query.type){
+    try{
+      setTimeout(() => {
+        return roles(req,res)
+      },1500)
+    }catch{
+      return res.status(500).json({success : false})
+    }
+ }else{
+   return res.status(400).json({success : false})
+ }
+})
+
   /**
     * @name /user/*
     * 
@@ -189,6 +236,12 @@ router.get('/sync/commands', async (req, res, next) => {
      * @name /command/*
      */
     router.use('/command', CommandRouter)
+
+    /**
+     * @name /modules/*
+     * 
+     */
+    router.use('/modules',ModuleRouter)
 
     router.use('/lang', LangRouter)
 

@@ -1,9 +1,12 @@
 const path = require('path')
 
 module.exports = {
-    entry : "./src/client/index.tsx",
+    entry : {
+        bundle : "./src/client/index.tsx",
+        captcha : "./src/client/captcha/index.tsx"
+    },
     output : {
-        filename : "bundle.js",
+        filename : "[name].js",
         path : path.resolve(__dirname, 'dist', 'client')
     },
     module : {

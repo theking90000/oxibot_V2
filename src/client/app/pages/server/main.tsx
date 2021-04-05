@@ -18,6 +18,8 @@ import CommandsSelector from "./componements/CommandsSelector";
 import EditCommand from "./EditCommand";
 import TranslateIcon from '@material-ui/icons/Translate';
 import LangManager from "./LangManager";
+import ModuleSelector from "./componements/ModuleSelector";
+import EditModule from "./EditModule";
 
 const handleData = (store) => {
     return store.SyncData.guilds.find(c => c.id === store.ChangeGuild.guild.id) || { noGuild : true }
@@ -71,7 +73,7 @@ const MainPageServer = props => {
         }
     })
     const CmdList = []
-
+    if(props.cmds)
     for(const cmds of props.cmds){
         CmdList.push({
             name : cmds,
@@ -79,6 +81,23 @@ const MainPageServer = props => {
         })
     }
 
+    const ModuleList = []
+    if(props.modules)
+    for(const module of props.modules){
+        ModuleList.push({
+            name : module,
+            url :`/module/${module}`
+        })
+    }
+
+    const customLinks = []
+
+    if(CmdList[0]){
+        customLinks.push(<CommandsSelector cmds={CmdList} guildid={props.id} />)
+    }
+    if(ModuleList[0]){
+        customLinks.push(<ModuleSelector cmds={ModuleList} guildid={props.id} />)
+    }
     return (
         <div>
             <AppBar name={props.name} drawer={true} menu={links.map(c => {
@@ -91,7 +110,7 @@ const MainPageServer = props => {
                     icon : c.icon
                 }
             })}
-            customLink={CmdList[0] ? <CommandsSelector cmds={CmdList} guildid={props.id} /> : <div></div>}
+            customLink={customLinks}
             >
             
             <Switch >
@@ -110,6 +129,11 @@ const MainPageServer = props => {
                 {CmdList[0] && CmdList.map((value,key) => (
                     <Route key={key} path={`/guild/${props.id}${value.url}`}>
                         {hasPermission('panel.commands.edit',perms) && <EditCommand {...props} cmd_name={value.name} />}
+                    </Route>
+                ))}
+                {ModuleList[0] && ModuleList.map((value,key) => (
+                    <Route key={key} path={`/guild/${props.id}${value.url}`}>
+                        {hasPermission('panel.commands.edit',perms) && <EditModule {...props} module_name={value.name} />}
                     </Route>
                 ))}
             </Switch>

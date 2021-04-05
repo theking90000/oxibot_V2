@@ -6,6 +6,8 @@ const command : commandType = {
     name : `clear`,
     settings : {
         canBeDisabled : true,
+        Aliases : ["cc"],
+        canHasAliases : true,
         data : {
             logchannel : {
                 type : "string",

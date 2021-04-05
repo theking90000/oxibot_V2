@@ -66,7 +66,8 @@ export default function Selector(props :
         canAdd? : boolean,
         canRemove? : boolean,
         availables : val[]
-        onChange : (type : 'ADD' | 'REMOVE', value : val ) => void;
+        onChange? : (type : 'ADD' | 'REMOVE', value : val, ) => void;
+        onChangeCancelable? : (type : 'ADD' | 'REMOVE', value : val, cancel :(b : boolean) => void) => void;
         }) {
     
         const [selected, ModifySelected] = React.useState(props.selected);
@@ -83,17 +84,33 @@ export default function Selector(props :
 
         var chipAdd;
 
-        const handleDelete = (data : val) => {
+        const handleDelete = async (data : val) => { 
+          if(props.onChangeCancelable){
+            if(await new Promise(async promise => {
+              props.onChangeCancelable("REMOVE", data,(boolean) => {
+
+                promise(boolean);
+              })}))return
+          }  
             ModifySelected((state) => state.filter((datax) => datax !== data))
             ModifyAvailables((state) => {state.push(data);return state})
             setDisplayEd((state) => {state.push(data);return state})
+            if(props.onChange)
             props.onChange('REMOVE', data)
         }
 
-        const handleAdd = (data : val) => {
+        const handleAdd = async (data : val) => {
+          if(props.onChangeCancelable){
+            if(await new Promise(async promise => {
+              props.onChangeCancelable("ADD", data,(boolean) => {
+
+                promise(boolean);
+              })})) return
+          }  
             ModifyAvailables((state) => state.filter((datax) => datax !== data))
             ModifySelected((state) => {state.push(data);return state})
             setDisplayEd((state) => state.filter((datax) => datax !== data))
+            if(props.onChange)
             props.onChange('ADD', data)
         }
 

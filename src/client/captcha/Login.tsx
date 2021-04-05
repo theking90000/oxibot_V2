@@ -1,27 +1,16 @@
-import * as React from "react";
+import * as React from "react"
 
 import Container from "@material-ui/core/Container"
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
-import { store } from "../../app/app"
-import { push } from 'connected-react-router'
-
-const {callbacks_url, appid} = (window as any).appdata;
-
-export default function Login(props){
+export default function Login(props : {appid,callback : string[]}){
     
 
-    React.useEffect(() => {
-
-    })
-
     const handleClick = (e) => {
-        let url = `https://discord.com/api/oauth2/authorize?client_id=${appid}&redirect_uri=${encodeURIComponent(callbacks_url[0])}&response_type=token&scope=identify%20guilds`
+        let url = `https://discord.com/api/oauth2/authorize?client_id=${props.appid}&redirect_uri=${encodeURIComponent(props.callback[0])}&response_type=token&scope=identify%20guilds`
         window.location.href = url
-
-        console.log(e)
     }
 
     return(

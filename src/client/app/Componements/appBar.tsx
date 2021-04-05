@@ -109,7 +109,7 @@ export default function PersistentDrawerLeft(props : {
       action : (event?: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
       icon? : JSX.Element
     }[],
-    customLink? : JSX.Element
+    customLink? : JSX.Element[]
   }) {
 
     const [width, setWidth] = React.useState<number>(window.innerWidth);
@@ -204,7 +204,11 @@ export default function PersistentDrawerLeft(props : {
             </ListItem>
           ))}
           {props.customLink && <React.Fragment>
-            {props.customLink}
+            {props.customLink.map((value,index) =>(
+              <React.Fragment key={index} >
+                {value}
+              </React.Fragment>
+            ))}
           </React.Fragment>}
         </List>
       </Drawer>}

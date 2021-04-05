@@ -4,7 +4,7 @@ import { getGroups } from "../../../cache/group"
 import { getGuild } from "../../../cache/guilds"
 import { commandBaseSettings } from "../../../database/models/guild";
 import { getAllLang, GetAllServersCustomLangs } from "../../../cache/lang";
-
+import {getGuild as getGuildM } from "../../../cache/Module"
 
 export type syncObjD = {
     userinfo : {
@@ -40,6 +40,7 @@ type syncObjGuild = {
     cmds? : string[],
     groups : groups[],
     settings? : setting[],
+    modules? : string[],
     availableslangs : string[],
 }
 export type channel = {
@@ -149,8 +150,12 @@ export default async function (user: ActionUserWeb) : Promise<syncObjD> {
             if(guild_b)
             cmds = guild_b.commands.map(x => (x.name))
         }
-
-        
+        let modules : string[];
+        if(getUsr.permission.hasPermission('panel.modules.see')) {
+            const guild_b = getGuildM(guild.Guild.id)
+            if(guild_b)
+            modules = Array.from(guild_b.keys())
+        }
 
         guilds.push({
             id : guild.Guild.id,
@@ -166,6 +171,7 @@ export default async function (user: ActionUserWeb) : Promise<syncObjD> {
                 count : guild.Guild.memberCount,
             },
             cmds,
+            modules,
             groups : G_G,
              settings,
              availableslangs : getAllLang().map(x=>x.lang),

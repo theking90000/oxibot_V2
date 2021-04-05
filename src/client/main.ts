@@ -6,11 +6,10 @@ import { setPermissionList } from "./reducers/Docs"
 import {__first} from "./store"
 import { AutoDetectGuild } from "./reducers/ChangeGuild"
 
-declare const window : any
+//declare const window : any
 
 
 export default async function start(){
-
     const backurl = store.getState().router.location
 
     if(store.getState().SyncData.userinfo.id) return store.dispatch(push('/'));
@@ -31,6 +30,12 @@ export default async function start(){
         const res = await x.json()
         if(res.success){
         window.localStorage.oxibotV2_token = res.token
+        if(getCookie("Oxibot_V2_captcha_module")){
+            const cookie = getCookie("Oxibot_V2_captcha_module")
+            document.cookie = "Oxibot_V2_captcha_module=;path=/"
+            if(cookie !== null)
+            return window.location.href =  cookie
+         }
         }else{
             return store.dispatch(replace('/login')); 
         }
@@ -67,3 +72,10 @@ export default async function start(){
     }
 
 }
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+  

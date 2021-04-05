@@ -3,7 +3,7 @@ import { readdirSync } from "fs";
  
 const cache = new Map<string,any>();
 
-export const register_cache = () => {
+export const register_cache = async () => {
 
     const commandsFile = readdirSync(path.join(__dirname , 'cache')).filter(file => file.endsWith('.js'));
 

@@ -7,6 +7,7 @@ import { getCommandData, getCommandsWithAliases, getGuild } from "../cache/guild
 import { IGuildDocument } from "../database/models/guild";
 import { getLangFromMessage, langobject } from "../utils/i18n"
 import { selectUser } from "../cache/user";
+import { ExecuteEvent } from "../modules/module";
 
 export interface message_ extends Message {
     userPerm? :  permissionuser,
@@ -21,11 +22,13 @@ const HandleGuildMessage = async (message : Message) => {
     const guild = getGuild(message.guild.id)
     const prefix_  = guild ? guild.settings.server.prefix : prefix
 
-    if(!message.content.startsWith(prefix_)) return
+    if(message.content.startsWith(prefix_)) {
 
     const args = message.content.slice(prefix_.length).split(' ');
     var command_ = args.shift().toLowerCase();
     const user = selectUser(message.guild.id, message.author.id)
+
+    // Injection de props au message de base
     var msg: message_;
     msg = message
     msg.guild_params = guild;
@@ -37,14 +40,17 @@ const HandleGuildMessage = async (message : Message) => {
         guild,
         user: user ? user.user : null
     })
-    const al = getCommandsWithAliases(message.guild.id,command_)
-    if(al && !commands.has(command_)){
-        command_ = al
+
+    // Check les aliases
+    const aliases = commands.has(command_) ? null : getCommandsWithAliases(message.guild.id,command_)
+    if(aliases){
+        command_ = aliases
     }
+    // Recherche la commande, récupère ses données et l'éxécute
     if(commands.has(command_)){
         try{
             const data = await getCommandData(message.guild.id,command_);
-            if(data)msg.data = data.settings.settings.data;
+            if(data) msg.data = data.settings.settings.data;
             if(!data || data.enabled === true){
                 commands.get(command_).execute(msg)
             }
@@ -55,6 +61,10 @@ const HandleGuildMessage = async (message : Message) => {
             message.react('❌')
         }
     }
+}
+
+    ExecuteEvent("message",message.guild.id, message)
+
 }
 
 client.on('message',(message) => {

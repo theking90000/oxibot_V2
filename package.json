@@ -14,6 +14,7 @@
   "dependencies": {
     "@babel/core": "^7.13.10",
     "@babel/preset-env": "^7.13.10",
+    "@hcaptcha/react-hcaptcha": "^0.3.6",
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
@@ -36,6 +37,7 @@
     "pidusage": "^2.0.21",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-google-recaptcha": "^2.1.0",
     "react-i18next": "^11.8.8",
     "react-redux": "^7.2.2",
     "react-router": "^5.2.0",
@@ -64,6 +66,7 @@
     "@types/pidusage": "^2.0.1",
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
+    "@types/react-google-recaptcha": "^2.1.0",
     "@types/react-i18next": "^8.1.0",
     "@types/react-redux": "^7.1.16",
     "@types/react-router": "^5.1.11",

@@ -4,6 +4,7 @@ import users,{getUsers,addUser, selectUser}  from "../cache/user";
 import * as guildsCache from "../cache/guilds"
 import * as chalk from "chalk"
 import { GuildMember } from "discord.js";
+import { createAllModules } from "../cache/Module";
 
 client.on('guildCreate',async (guild) => {
      
@@ -35,6 +36,8 @@ client.on('guildCreate',async (guild) => {
         if(!guildsCache.hasGuild(guild.id)){
             guildsCache.CreateGuild(guildsCache.DefaultGuild(guild.id));
         }
+
+        createAllModules(guild.id);
 
         
 })

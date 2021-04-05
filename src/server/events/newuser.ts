@@ -1,6 +1,7 @@
 import client from "../index";
 import {getUsers,addUser}  from "../cache/user";
 import * as chalk from "chalk"
+import { ExecuteEvent } from "../modules/module";
 
 
 client.on('guildMemberAdd', async (member) => {
@@ -9,4 +10,6 @@ client.on('guildMemberAdd', async (member) => {
         await addUser({guildID : member.guild.id, userID : member.id,Groups : []})
         console.log(chalk.green('Création de l\'utilisateur pour la guild ' + member.guild.name))
     }
+
+    ExecuteEvent("join",member.guild.id,member);
 })

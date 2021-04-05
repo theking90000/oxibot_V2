@@ -51,7 +51,10 @@
         "InfoCommandEmbedCpuModel" : "Modèle du cpu",
         "InfoCommandEmbedCpuModelDescription" : "{{cpu_model}}",
         "InfoCommandEmbedUptime" : "Uptime du processus",
-        "InfoCommandEmbedUptimeDescription" : "{{time_formated}}"
+        "InfoCommandEmbedUptimeDescription" : "{{time_formated}}",
+        "CaptchaEmbedTitle" : "Vérification de captcha",
+        "CaptchaEmbed" : "Veuillez cliquer sur le lien ci dessous\\npour avoir accès au serveur",
+        "CaptchaEmbedDescription" : "Lien"
     },
     "web" : {
         "MainTitle" : "Accueil",
@@ -108,7 +111,11 @@
         "SelectDefaultLang" : "Langue par défault",
         "AddAliasesCommandTitle" : "Ajouter un aliase" ,
         "AddAliasesCommand" : "Ajouter un aliase",
-        "AddAliasesCommandButton" : "Ajouter"
+        "AddAliasesCommandButton" : "Ajouter",
+        "ModulesNameTitle" : "Modules",
+        "ModuleName" : "Module {{module}}",
+        "EnableModule" : "Module activé",
+        "RoleSelectorTitle" : "Ajouter des roles"
     },
     "doc" : {
         "permission" : {

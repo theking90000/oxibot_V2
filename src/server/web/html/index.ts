@@ -1,4 +1,10 @@
-<!DOCTYPE html>
+import { site_base_url ,callbacks_url,appid } from "../../../../config.js"
+
+export default async function (unique_id : string) {
+    try{
+        
+
+const text = `<!DOCTYPE html>
 <html lang="fr">
 <head>
     <!-- OxibotV2 by theking90000 https://github.com/theking90000/oxibot_V2 -->
@@ -7,6 +13,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
     <title>OxiBot</title>
+    <script>
+        window.appdata = ${JSON.stringify({
+            site_base_url,callbacks_url,appid
+        })}
+    </script>
     <style> 
         html, 
         body {
@@ -37,4 +48,10 @@
     </div>
     <script src="/bundle.js"></script>
 </body>
-</html>
+</html>`
+return text;
+    }catch{
+        
+    }
+    return null;
+}

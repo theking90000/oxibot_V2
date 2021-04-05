@@ -6,8 +6,9 @@ import { register_cache } from "./cache";
 import { connectdb } from "./database/database";
 import { blue, blueBright, red, redBright } from "chalk"
 import web from "./web/app";
+import "./modules/ModuleManager";
 
-export const version = "0.1"
+export const version = "0.1";
 
 const client = new Client({
     ws: { compress: true },
@@ -16,10 +17,7 @@ const client = new Client({
 
 (async () => {
     await connectdb({
-        database : mongodb.database,
-        host : mongodb.host,
-        password : mongodb.password,
-        user : mongodb.user,
+        ...mongodb
     });
     console.log(blueBright(`Connecté a la base de données ! (${mongodb.host})`));
 })().then(() => {
@@ -33,7 +31,7 @@ const client = new Client({
     web()
 
 })
-
+process.title = `Oxibot_V2`;
 process.on('uncaughtException', (err) => {
     console.log(redBright("Une erreur est survenue :") + red(err.message) + blue(err.stack))
 })
