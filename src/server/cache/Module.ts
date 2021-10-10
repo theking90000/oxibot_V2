@@ -48,19 +48,20 @@ export const updateCache = async () : Promise<void> => {
 
 export const MigrateModuleData = async () => {
 
-    for(const g_ of Modules.keys()){
+    for (const g_ of Modules.keys()) {
         const guild = getGuild(g_);
-        for(const m of guild.values()){
+        for (const m of guild.values()) {
             const mod = ModuleManager.Modules.find(x => x.getName() === m.name)
             if(!mod || JSON.stringify(m.data) === JSON.stringify(mod.getDefaultSettings())) continue;
             m.data = {
                 ...mod.getDefaultSettings(),
                 ...m.data
             }
-            m.markModified("data")
-            await m.save()
+           m.markModified("data");
+           await m.save();
             
         }
+         createAllModules(g_)
     }
 
 }
@@ -177,6 +178,115 @@ export const setData = async (guildID: string,name : string,value : any,path : s
                     if(!r) return;
                 }
                 module._doc.data[path].value = value;
+                break;
+            }
+            case "AdvancedSetting": {
+                const data = module._doc.data[path];
+                const _d = [];
+                for (const Value of value) {
+                    const x = {};
+                    for (const V in Value) {
+                        if (data.value?.availables[V]) {
+                            const data_ = data.value.availables[V]
+                            if (data_.meta?.with_value &&
+                                (Value[data_.meta.with_value.name] &&
+                                    Value[data_.meta.with_value.name].selected &&
+                                     Value[data_.meta.with_value.name].selected !==
+                                data_.meta.with_value.value.selected)) return;
+                            if (
+                                !data || (data_.meta?.with_value &&
+                                    (Value[data_.meta.with_value.name] &&
+                                !Value[data_.meta.with_value.name].selected &&
+                                Value[data_.meta.with_value.name] !==
+                                data_.meta.with_value.value))
+                            ) return;
+                                switch (data_.type) {
+                                    case "string": {
+                                        if (typeof Value[V] === "string") {
+                                            x[V] = validtext(Value[V]);
+                                            break;
+                                        }
+                                    }
+                                    case "number": {
+                                        if (!isNaN(parseInt(Value[V]))) {
+                                            x[V] = parseInt(Value[V]);
+                                            break;
+                                        }
+                                    }
+                                    case "choice": {
+                                    if (
+                                      Value[V].selected &&
+                                      data_.default.availables &&
+                                      data_.default.availables.includes(
+                                        Value[V].selected
+                                      )
+                                    ) {
+                                        x[V] = {
+                                          selected: validtext(
+                                            Value[V].selected
+                                          ),
+                                          availables: data_.default.availables,
+                                        };
+                                      break;
+                                    }
+                                        }
+                                    case "role": {
+                                        if (Array.isArray(Value[V])) {
+                                            if (
+                                                data_.meta &&
+                                                data_.meta.min &&
+                                                data_.meta.min > Value[V].length
+                                            )
+                                                return;
+                                            if (
+                                                data_.meta &&
+                                                data_.meta.max &&
+                                                data_.meta.max < Value[V].length
+                                            )
+                                                return;
+                                            for (const v of Value[V]) {
+                                                const r = client.guilds.cache
+                                                    .get(guildID)
+                                                    .roles.cache.get(v);
+                                                if (!r) return;
+                                            }
+                                            x[V] = Value[V]
+                                            break;
+                                        }
+                                    }
+                                    case "channel": {
+                                         if (Array.isArray(Value[V])) {
+                                           if (
+                                             data_.meta &&
+                                             data_.meta.min &&
+                                             data_.meta.min > Value[V].length
+                                           )
+                                             return;
+                                           if (
+                                             data_.meta &&
+                                             data_.meta.max &&
+                                             data_.meta.max < Value[V].length
+                                           )
+                                             return;
+                                           for (const v of Value[V]) {
+                                             const r = client.guilds.cache
+                                               .get(guildID)
+                                               .channels.cache.get(v);
+                                             if (!r) return;
+                                           }
+                                           x[V] = Value[V];
+                                           break;
+                                         }
+                                        }
+                                }         
+                        } else {
+                            return;
+                       }
+                    }
+                    console.log(x);
+                    _d.push(x)
+                }
+                module._doc.data[path].value.selected = _d;
                 break;
             }
             default :{

@@ -11,5 +11,5 @@ client.on('guildMemberAdd', async (member) => {
         console.log(chalk.green('Création de l\'utilisateur pour la guild ' + member.guild.name))
     }
 
-    ExecuteEvent("join",member.guild.id,member);
+    
 })

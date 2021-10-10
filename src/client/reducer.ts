@@ -8,6 +8,7 @@ import Translations from "./reducers/Translations"
 import Commands from "./reducers/Commands" 
 import Modules from "./reducers/Modules" 
 import Roles from "./reducers/Roles" 
+import Users from "./reducers/Users"; 
 
 
 const createRootReducer = (history) => combineReducers({
@@ -19,7 +20,8 @@ const createRootReducer = (history) => combineReducers({
     Translations,
     Commands,
     Modules,
-    Roles
+    Roles,
+    Users
 })
 
 export default createRootReducer

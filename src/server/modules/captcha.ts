@@ -75,6 +75,7 @@ export default class Captcha extends Module{
          */
         if(e.name === "join"){
         const event = e.event as GuildMember
+        if(event.user.bot) return;
           var userd = this.getUserData(event.guild.id,event.id) as userdata;
            if(!userd.captcha_id){
                const data : userdata = {
@@ -269,9 +270,9 @@ const routes = (router :Router): Router => {
                 if(await proxycheck(ip)){
                     return res.status(401).json({success : false, error : "VPN DETECTED"})
                 }
-               
+                ip = await hash(ip); 
                 const ips = module.getAllIps().filter(x => x === ip);
-                ip = await hash(ip) 
+                
                 if(ips.length === 0 || ips.length+1 <= data.maxAccountPerIp.value){
                 module.passCaptcha(captcha.data.captcha_id, ip);
                 return res.status(200).json({success : true})

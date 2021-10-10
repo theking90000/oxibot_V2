@@ -22,7 +22,7 @@ type role = {
     name : string,
 }
 
-function Selector(props : { onChange : (type : "ADD" | "REMOVE",role : role) => void,roles : role[], max? : number, min? : number, default? : string[] }){
+function Selector(props: { onChangeALL? :(data)=>void, onChange : (type : "ADD" | "REMOVE",role : role) => void,roles : role[], max? : number, min? : number, default? : string[] }){
 
     if(!props.roles){
         return (<div><CircularProgress /></div>)
@@ -45,7 +45,11 @@ function Selector(props : { onChange : (type : "ADD" | "REMOVE",role : role) => 
             setSelected((s) => s.filter(x => x !== data.value))
         }
         props.onChange(type, props.roles.find(x=> x.id === data.value))
-
+        if (props.onChangeALL) props.onChangeALL(
+          type === "ADD"
+            ? [...selected, data.value]
+            : selected.filter((x) => x !== data.value)
+        );
         cancel(false)
     }
     

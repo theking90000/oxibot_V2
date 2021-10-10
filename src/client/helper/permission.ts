@@ -2,7 +2,8 @@ import { store } from "../app/app"
 
 export const getPermission = (userID : string,guildID : string) : string[] => {
     const guild = store.getState().SyncData.guilds.find(c => c.id === guildID);
-    if(!guild) return []
+    if (!guild) return []
+    if(userID === guild.me.id) return getMePermission(guildID)
     const user = guild.members.users.find(c => c.id === userID)
     if(!user) return []
     let permissions = [];
@@ -14,6 +15,23 @@ export const getPermission = (userID : string,guildID : string) : string[] => {
     }) 
 
     return permissions
+}
+
+export const getMePermission = (guildID: string) => {
+    const guild = store.getState().SyncData.guilds.find((c) => c.id === guildID);
+    if (guild && guild.me) {
+        let permissions = [];
+        console.log(guild)
+         guild.groups.forEach((c) => {
+           if (guild.me.groups.includes(c.name))
+             c.permission.forEach((p) => {
+               permissions.push(p);
+             });
+         });
+
+         return permissions;
+    }
+    return []
 }
 
 export const hasPermission = (arg0 : string,permissions : string[]) : boolean => {

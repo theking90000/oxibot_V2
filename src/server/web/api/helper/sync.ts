@@ -30,11 +30,8 @@ type syncObjGuild = {
     owner? : {
         id : string
     },
-    me : {
-        id : string,
-    },
+    me : BasicUser,
     members : {
-        users? : BasicUser[]
         count : number,
     },
     cmds? : string[],
@@ -115,35 +112,8 @@ export default async function (user: ActionUserWeb) : Promise<syncObjD> {
             G_G.push({name : c.name,permission: c.permissions})
         })
 
-        if(getUsr.permission.hasPermission('panel.users.see')){
-
-        for(const [id, member] of guild.Guild.members.cache){
-
-            
-
-            if(member.user.bot) continue;
-
-            
-            const group = Users.find(x => x.userID === id) ? Users.find(x => x.userID === id).Groups : []
-        guildm.push({
-                id : id,
-                nickname : member.nickname,
-                tag : member.user.tag,
-                avatarUrl : member.user.displayAvatarURL({dynamic : true,format : "webp",size : 128}),
-                groups : group ? group : [] 
-            })
-        }}else{
-            const member = guild.Guild.members.cache.get(user.getDiscord.User.id)
-            const group = selectUser(guild.Guild.id,member.id).getGroups().map(x => x.name)
-            guildm.push({
-                id : member.id,
-                nickname : member.nickname,
-                tag : member.user.tag,
-                avatarUrl : member.user.displayAvatarURL({dynamic : true,format : "webp",size : 128}),
-                groups : group ? group : [] 
-            })
-            
-        }
+        
+        
         let cmds : string[];
         if(getUsr.permission.hasPermission('panel.commands.see')){
             const guild_b = getGuild(guild.Guild.id)
@@ -156,27 +126,36 @@ export default async function (user: ActionUserWeb) : Promise<syncObjD> {
             if(guild_b)
             modules = Array.from(guild_b.keys())
         }
-
+const member_ = guild.Guild.members.cache.get(user.getDiscord.User.id);
+const group_ = selectUser(guild.Guild.id, member_.id).getGroups().map((x) => x.name);
         guilds.push({
-            id : guild.Guild.id,
-            name : guild.Guild.name,
-            owner : (user.guilds.get(id).permission.hasPermission('panel.users.see') ? {
-                id : guild.Guild.owner.id
-             } : null ),
-            me : {
-                id : user.getDiscord.User.id,
-            },
-            members : {
-                users : guildm,
-                count : guild.Guild.memberCount,
-            },
-            cmds,
-            modules,
-            groups : G_G,
-             settings,
-             availableslangs : getAllLang().map(x=>x.lang),
-            
-        })
+          id: guild.Guild.id,
+          name: guild.Guild.name,
+          owner: user.guilds.get(id).permission.hasPermission("panel.users.see")
+            ? {
+                id: guild.Guild.owner.id,
+              }
+            : null,
+          me: {
+            id: member_.id,
+            nickname: member_.nickname,
+            tag: member_.user.tag,
+            avatarUrl: member_.user.displayAvatarURL({
+              dynamic: true,
+              format: "webp",
+              size: 128,
+            }),
+            groups: group_ ? group_ : [],
+          },
+          members: {
+            count: guild.Guild.memberCount,
+          },
+          cmds,
+          modules,
+          groups: G_G,
+          settings,
+          availableslangs: getAllLang().map((x) => x.lang),
+        });
     }
 
     return {

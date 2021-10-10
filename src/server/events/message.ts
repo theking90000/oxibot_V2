@@ -63,7 +63,7 @@ const HandleGuildMessage = async (message : Message) => {
     }
 }
 
-    ExecuteEvent("message",message.guild.id, message)
+
 
 }
 
