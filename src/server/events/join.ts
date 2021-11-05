@@ -26,7 +26,7 @@ client.on('guildCreate',async (guild) => {
         } 
     
         try{ 
-            let u =selectUser(guild.id,guild.owner.id);
+            let u =selectUser(guild.id,guild.ownerId);
              u.addGroup('admin');
             }
         catch {

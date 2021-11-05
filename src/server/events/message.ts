@@ -18,10 +18,10 @@ export interface message_ extends Message {
     lang?: langobject
 } 
 
-const HandleGuildMessage = async (message : Message) => {
+const HandleGuildMessage = async (message: Message) => {
+    
     const guild = getGuild(message.guild.id)
     const prefix_  = guild ? guild.settings.server.prefix : prefix
-
     if(message.content.startsWith(prefix_)) {
 
     const args = message.content.slice(prefix_.length).split(' ');
@@ -36,7 +36,7 @@ const HandleGuildMessage = async (message : Message) => {
     msg.userPerm = getUser({userID : message.author.id,guildID : message.guild.id})
     msg.prefix = prefix_;
     msg.lang = await getLangFromMessage({
-        channel: message.channel,
+        channel: await message.channel.fetch(),
         guild,
         user: user ? user.user : null
     })
@@ -67,9 +67,9 @@ const HandleGuildMessage = async (message : Message) => {
 
 }
 
-client.on('message',(message) => {
-
-    if(message.channel.type === "dm" || message.author.bot) return
+client.on('messageCreate',(message) => {
+    
+    if(message.channel.type === "DM" || message.author.bot) return
     HandleGuildMessage(message)
     
 })

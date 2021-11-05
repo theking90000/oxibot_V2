@@ -49,7 +49,7 @@ client.on("messageReactionAdd", async (e, user) => {
   if (Handlers.has(e.message.id)) {
     const h = Handlers.get(e.message.id);
     for (const [id, Callback] of h) {
-      Callback(new event(e, id, await user.fetch()));
+      Callback(new event(await e.fetch(), id, await user.fetch()));
     }
   }
 });

@@ -3,3 +3,4 @@ dist
 config.js
 yarn-error.log
 yarn.lock
+.idea

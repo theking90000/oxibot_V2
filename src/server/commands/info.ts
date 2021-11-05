@@ -2,6 +2,7 @@ import { commandType } from "../commands";
 import embed from "../utils/embed";
 import { cpus } from "os";
 import client, { version } from "..";
+import { VoiceChannel } from "discord.js";
 const pidusage = require("pidusage");
 
 const command: commandType = {
@@ -55,7 +56,7 @@ const command: commandType = {
           ],
         });
 
-        message.channel.send(em.getEmbed());
+        message.channel.send({ embeds: [em.getEmbed()] });
 
         break;
       }
@@ -77,7 +78,7 @@ const command: commandType = {
             {
               val1: message.lang.t("InfoCommandEmbedServerRegion"),
               val2: message.lang.t("InfoCommandEmbedServerRegionDescription", {
-                region: message.guild.region,
+                region:((await message.guild.channels.fetch()).find((c) =>c.type==="GUILD_VOICE") as VoiceChannel)?.rtcRegion,
               }),
               inline: true,
             },
@@ -96,8 +97,8 @@ const command: commandType = {
               val2: message.lang.t(
                 "InfoCommandEmbedServerVerificationOwnerDescription",
                 {
-                  user: `<@${message.guild.owner.id}>`,
-                  id: message.guild.owner.id,
+                  user: `<@${message.guild.ownerId}>`,
+                  id: message.guild.ownerId,
                 }
               ),
               inline: true,
@@ -131,10 +132,10 @@ const command: commandType = {
                 {
                   channels: message.guild.channels.cache.size,
                   text: message.guild.channels.cache.filter(
-                    (c) => c.type === "text"
+                    (c) => c.type === "GUILD_TEXT"
                   ).size,
                   voice: message.guild.channels.cache.filter(
-                    (c) => c.type === "voice"
+                    (c) => c.type === "GUILD_VOICE"
                   ).size,
                 }
               ),
@@ -156,9 +157,11 @@ const command: commandType = {
           ],
         });
 
-        message.channel.send(
-          em.getEmbed().setImage(message.guild.iconURL({ dynamic: true }))
-        );
+        message.channel.send({
+          embeds: [
+            em.getEmbed().setImage(message.guild.iconURL({ dynamic: true }))
+          ]
+        });
 
         break;
       }
@@ -210,7 +213,7 @@ const command: commandType = {
           ],
         });
 
-        return message.channel.send(em.getEmbed());
+        return message.channel.send({ embeds: [em.getEmbed()] });
       }
     }
   },

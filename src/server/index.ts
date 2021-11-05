@@ -11,15 +11,13 @@ import { addEventListeners } from "./modules/ModuleManager";
 export const version = "0.1";
 
 const client = new Client({
-  ws: { compress: true },
-  shards: "auto",
-  fetchAllMembers: true,
   presence: {
-    activity: {
+    activities: [{
       name: "Oxibot_V2",
       type: "WATCHING",
-    },
+    }],
   },
+  intents : ['GUILDS','DIRECT_MESSAGES','GUILD_BANS','GUILD_INVITES','GUILD_MEMBERS','GUILD_MESSAGES','GUILD_PRESENCES','GUILD_VOICE_STATES',]
 });
 
 (async () => {
@@ -29,7 +27,7 @@ const client = new Client({
   console.log(blueBright(`Connecté a la base de données ! (${mongodb.host})`));
 })().then(() => {
   client.login(token);
-
+  client.on("debug", console.debug);
   register_commands();
   register_cache();
   register_event();

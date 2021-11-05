@@ -25,9 +25,10 @@ const command : commandType = {
     },
     execute : async (message) => {
 
-        if(!message.args[0] && message.userPerm.hasPermission('command.clear')){
-            message.channel.send(embed({
-                name: message.lang.t('ClearCommandEmbedDefaultTitle'),
+        if (!message.args[0] && message.userPerm.hasPermission('command.clear')) {
+            message.channel.send({
+                embeds: [embed({
+                    name: message.lang.t('ClearCommandEmbedDefaultTitle'),
                 guildid: message.guild.id,
                 fields: [
                     {
@@ -55,7 +56,8 @@ const command : commandType = {
                         }),
                     }
                 ]
-            }).getEmbed())
+            }).getEmbed()]
+        })
         }
 
         else if (message.args[0] && message.userPerm.hasPermission('command.clear')){
@@ -93,16 +95,16 @@ const command : commandType = {
                     if(message.data.logChannelEnabled.value === true){
                         var cat : CategoryChannel
                         if(!message.guild.channels.cache.find(
-                            x => x.name.toLowerCase() === message.data.logchannel.value.toLowerCase() && x.type === "category"
+                            x => x.name.toLowerCase() === message.data.logchannel.value.toLowerCase() && x.type === "GUILD_CATEGORY"
                             )){
                            cat = (await message.guild.channels.create(message.data.logchannel.value,{
-                            type : "category"
+                            type : "GUILD_CATEGORY"
                            })) 
                         }
                         else cat = message.guild.channels.cache.find(
-                            x => x.name.toLowerCase() === message.data.logchannel.value.toLowerCase() && x.type === "category")  as CategoryChannel
+                            x => x.name.toLowerCase() === message.data.logchannel.value.toLowerCase() && x.type === "GUILD_CATEGORY")  as CategoryChannel
                         await channel.setParent(cat)
-                        await channel.createOverwrite(message.guild.roles.everyone,{ VIEW_CHANNEL : false,})
+                        await channel.permissionOverwrites.create(message.guild.roles.everyone,{ VIEW_CHANNEL : false,})
                     }else{
                         await message.channel.delete(message.lang.t('ClearCommandDeleteChannelLogsReason', {
                             user: message.author.tag,
@@ -118,37 +120,41 @@ const command : commandType = {
                     const n = parseInt(message.args[0])
 
                     if(!n){
-                        message.channel.send(embed({
-                            name: message.lang.t('EmbedErrorDefaultTitle'),
-                            guildid : message.guild.id,
-                            fields :  [
-                                {
-                                    val2: message.lang.t('EmbedErrorMessageDefault'),
-                                    val1: message.lang.t('ClearCommandEmbedErrorNotNumber', {
-                                        user: `<@${message.author.id}>`,
-                                        tag: message.author.tag,
-                                    })
-                                }
-                            ]
-                        }).getEmbed())
+                        message.channel.send({
+                            embeds: [embed({
+                                name: message.lang.t('EmbedErrorDefaultTitle'),
+                                guildid: message.guild.id,
+                                fields: [
+                                    {
+                                        val2: message.lang.t('EmbedErrorMessageDefault'),
+                                        val1: message.lang.t('ClearCommandEmbedErrorNotNumber', {
+                                            user: `<@${message.author.id}>`,
+                                            tag: message.author.tag,
+                                        })
+                                    }
+                                ]
+                            }).getEmbed()]
+                        })
 
                         return
                     }
 
                     if(n < 0 || n > 100){
-                        message.channel.send(embed({
-                            name: message.lang.t('EmbedErrorDefaultTitle'),
-                            guildid: message.guild.id,
-                            fields: [
-                                {
-                                    val2: message.lang.t('EmbedErrorMessageDefault'),
-                                    val1: message.lang.t('ClearCommandEmbedErrorNotValidNumber', {
-                                        user: `<@${message.author.id}>`,
-                                        tag: message.author.tag,
-                                    })
-                                }
-                            ]
-                        }).getEmbed())
+                        message.channel.send({
+                            embeds: [embed({
+                                name: message.lang.t('EmbedErrorDefaultTitle'),
+                                guildid: message.guild.id,
+                                fields: [
+                                    {
+                                        val2: message.lang.t('EmbedErrorMessageDefault'),
+                                        val1: message.lang.t('ClearCommandEmbedErrorNotValidNumber', {
+                                            user: `<@${message.author.id}>`,
+                                            tag: message.author.tag,
+                                        })
+                                    }
+                                ]
+                            }).getEmbed()]
+                        })
 
                         return
                     }

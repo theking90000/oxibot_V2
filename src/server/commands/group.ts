@@ -8,26 +8,28 @@ const command : commandType = {
 
     execute : async (message) => {
             if(!message.args[0] && message.userPerm.hasPermission('command.group')){
-               message.channel.send(embed({
-                   name: message.lang.t(`GroupCommandEmbedDefaultTitle`,),
-                   guildid : message.guild.id,
-                     fields : [{
-                         val1: message.lang.t(`GroupCommandEmbedDefaultList`, { prefix: message.prefix }),
-                         val2: message.lang.t(`GroupCommandEmbedDefaultListDescription`, { permission: "command.group.list" })
-                         },
-                         {
-                             val1: message.lang.t(`GroupCommandEmbedDefaultPermission`, { prefix: message.prefix }),
-                             val2: message.lang.t(`GroupCommandEmbedDefaultPermissionDescription`, {
-                                 permission: "command.group.permission"
-                             })
-                         },
-                         {
-                             val1: message.lang.t(`GroupCommandEmbedDefaultAdduser`, { prefix: message.prefix }),
-                             val2: message.lang.t(`GroupCommandEmbedDefaultAdduserDescription`, {
-                                 permission: "command.group.permission"
-                             })
-                         }]
-                    }).getEmbed()) 
+                message.channel.send({
+                    embeds: [embed({
+                        name: message.lang.t(`GroupCommandEmbedDefaultTitle`,),
+                        guildid: message.guild.id,
+                        fields: [{
+                            val1: message.lang.t(`GroupCommandEmbedDefaultList`, { prefix: message.prefix }),
+                            val2: message.lang.t(`GroupCommandEmbedDefaultListDescription`, { permission: "command.group.list" })
+                        },
+                        {
+                            val1: message.lang.t(`GroupCommandEmbedDefaultPermission`, { prefix: message.prefix }),
+                            val2: message.lang.t(`GroupCommandEmbedDefaultPermissionDescription`, {
+                                permission: "command.group.permission"
+                            })
+                        },
+                        {
+                            val1: message.lang.t(`GroupCommandEmbedDefaultAdduser`, { prefix: message.prefix }),
+                            val2: message.lang.t(`GroupCommandEmbedDefaultAdduserDescription`, {
+                                permission: "command.group.permission"
+                            })
+                        }]
+                    }).getEmbed()]
+                })
                 }
 
             /**
@@ -57,7 +59,7 @@ const command : commandType = {
                     }])
                 })
 
-                message.channel.send(em.getEmbed());
+                message.channel.send({ embeds: [em.getEmbed()] });
 
             }
 
@@ -99,7 +101,7 @@ const command : commandType = {
                                     em.addFields([{
                                         val1: message.lang.t('GroupCommandEmbedPermissionNoPerm')
                                     }])
-                                message.channel.send(em.getEmbed())
+                                message.channel.send({ embeds: [em.getEmbed()] })
 
                             }
                             }
@@ -120,35 +122,39 @@ const command : commandType = {
     
                         if(group){
                             if(ugroup.includes(group.name)){
-                                message.channel.send(embed({
-                                    name: message.lang.t("EmbedErrorDefaultTitle"),
-                                    guildid : message.guild.id,
-                                    fields : [{
-                                        val1: message.lang.t('EmbedErrorMessageDefault'),
-                                        val2: message.lang.t('GroupCommandAddUserAlreadyInGroup', {
-                                            user: `<@${user.id}>`,
-                                            groupname: group.name,
-                                            tag: user.tag
-                                        })
-                                    }]
-                                }).getEmbed())
+                                message.channel.send({
+                                    embeds: [embed({
+                                        name: message.lang.t("EmbedErrorDefaultTitle"),
+                                        guildid: message.guild.id,
+                                        fields: [{
+                                            val1: message.lang.t('EmbedErrorMessageDefault'),
+                                            val2: message.lang.t('GroupCommandAddUserAlreadyInGroup', {
+                                                user: `<@${user.id}>`,
+                                                groupname: group.name,
+                                                tag: user.tag
+                                            })
+                                        }]
+                                    }).getEmbed()]
+                                })
                             }
                             else {
                                 us.addGroup(group.name)
-                                message.channel.send(embed({
-                                    name: message.lang.t('GroupCommandEmbedAddUserSuccessTitle'),
-                                    guildid : message.guild.id,
-                                    fields : [{
-                                        val1: message.lang.t('GroupCommandEmbedAddUserSuccess', {
-                                            groupname: group.name,
-                                        }),
-                                        val2: message.lang.t('GroupCommandEmbedAddUserSuccessDescription', {
-                                            user: `<@${user.id}>`,
-                                            groupname: group.name,
-                                            tag: user.tag
-                                        })
-                                    }]
-                                }).getEmbed())
+                                message.channel.send({
+                                    embeds: [embed({
+                                        name: message.lang.t('GroupCommandEmbedAddUserSuccessTitle'),
+                                        guildid: message.guild.id,
+                                        fields: [{
+                                            val1: message.lang.t('GroupCommandEmbedAddUserSuccess', {
+                                                groupname: group.name,
+                                            }),
+                                            val2: message.lang.t('GroupCommandEmbedAddUserSuccessDescription', {
+                                                user: `<@${user.id}>`,
+                                                groupname: group.name,
+                                                tag: user.tag
+                                            })
+                                        }]
+                                    }).getEmbed()]
+                                })
                             }
                         }
                            

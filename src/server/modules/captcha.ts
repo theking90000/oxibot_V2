@@ -107,14 +107,16 @@ export default class Captcha extends Module{
                     }
                 }
             }
-            return event.user.send(embed({
-                guildid : event.guild.id,
-                name : lang.t("CaptchaEmbedTitle"),
-                fields : [{
-                    val1 : lang.t('CaptchaEmbed'),
-                    val2 : `[${lang.t("CaptchaEmbedDescription")}](${this.getLink(userd.captcha_id)})`
-                }]
-            }).getEmbed())
+               return event.user.send({
+                   embeds: [embed({
+                       guildid: event.guild.id,
+                       name: lang.t("CaptchaEmbedTitle"),
+                       fields: [{
+                           val1: lang.t('CaptchaEmbed'),
+                           val2: `[${lang.t("CaptchaEmbedDescription")}](${this.getLink(userd.captcha_id)})`
+                       }]
+                   }).getEmbed()]
+               })
             
            }
           

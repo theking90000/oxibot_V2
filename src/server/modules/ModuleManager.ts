@@ -19,8 +19,8 @@ export function addEventListeners() {
   client.on("guildMemberAdd", (member) =>
     ExecuteEvent("join", member.guild.id, member)
   );
-  client.on("message", (message) => {
-    if (message.channel.type !== "dm")
+  client.on("messageCreate", (message) => {
+    if (message.channel.type !== "DM")
       ExecuteEvent("message", message.guild.id, message);
   });
   client.on("guildMemberRemove", (member) =>

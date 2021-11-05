@@ -10,22 +10,25 @@ const command : commandType = {
 
         if(!message.args[0] && message.userPerm.hasPermission('command.user')){
 
-            message.channel.send(embed({
-                name : "Gérer les utilisateur",
-                guildid : message.guild.id,
-                  fields : [{
-                          val1 : `${message.prefix}user @user info`,
-                          val2 : "Renvoie les informations sur l'utilisateur\n(permission : command.user.info)"
-                      },
-                      {
-                        val1 : `${message.prefix}user @user addgroup <group>`,
-                        val2 : "Ajoute un groupe a l'utilisateur \n(permission : command.user.addgroup)"
+            message.channel.send({
+                embeds: [embed({
+                    name: "Gérer les utilisateur",
+                    guildid: message.guild.id,
+                    fields: [{
+                        val1: `${message.prefix}user @user info`,
+                        val2: "Renvoie les informations sur l'utilisateur\n(permission : command.user.info)"
                     },
                     {
-                        val1 : `${message.prefix}user @user removegroup <group>`,
-                        val2 : "Retire un groupe a l'utilisateur \n(permission : command.user.removegroup)"
+                        val1: `${message.prefix}user @user addgroup <group>`,
+                        val2: "Ajoute un groupe a l'utilisateur \n(permission : command.user.addgroup)"
+                    },
+                    {
+                        val1: `${message.prefix}user @user removegroup <group>`,
+                        val2: "Retire un groupe a l'utilisateur \n(permission : command.user.removegroup)"
                     }
-                    ]}).getEmbed())
+                    ]
+                }).getEmbed()]
+            })
                 
 
         }
@@ -38,17 +41,20 @@ const command : commandType = {
             u2.getGroups().forEach(c => {
                 x += c.name +"\n"
             })
-            message.channel.send(embed({
-                name : `Info de l'utilisateur`,
-                guildid : message.guild.id,
-                  fields : [{
-                          val1 : `Groupes :`,
-                          val2 : x === "" ? "Aucun groupe !" : x
-                      },
-                    ]}).getEmbed()
-                    .setAuthor(user.tag,user.displayAvatarURL({ dynamic : true, }))
+                message.channel.send({
+                    embeds: [embed({
+                        name: `Info de l'utilisateur`,
+                        guildid: message.guild.id,
+                        fields: [{
+                            val1: `Groupes :`,
+                            val2: x === "" ? "Aucun groupe !" : x
+                        },
+                        ]
+                    }).getEmbed()
+                        .setAuthor(user.tag, user.displayAvatarURL({ dynamic: true, }))
                     
-                    )
+                    ]
+                })
                 
                 }
         }
@@ -66,25 +72,29 @@ const command : commandType = {
 
                     if(group){
                         if(ugroup.includes(group.name)){
-                            message.channel.send(embed({
-                                name : "Erreur !",
-                                guildid : message.guild.id,
-                                fields : [{
-                                    val1 : `Une erreur est survenue`,
-                                    val2 : `<@${user.id}> est déja dans le groupe ${group.name}`
-                                }]
-                            }).getEmbed())
+                            message.channel.send({
+                                embeds: [embed({
+                                    name: "Erreur !",
+                                    guildid: message.guild.id,
+                                    fields: [{
+                                        val1: `Une erreur est survenue`,
+                                        val2: `<@${user.id}> est déja dans le groupe ${group.name}`
+                                    }]
+                                }).getEmbed()]
+                            })
                         }
                         else {
                             us.addGroup(group.name)
-                            message.channel.send(embed({
-                                name : "Utilisateur ajouté !",
-                                guildid : message.guild.id,
-                                fields : [{
-                                    val1 : `Nouveau membre du groupe ${group.name}`,
-                                    val2 : `<@${user.id}> est désormais dans le groupe ${group.name}`
-                                }]
-                            }).getEmbed())
+                            message.channel.send({
+                                embeds: [embed({
+                                    name: "Utilisateur ajouté !",
+                                    guildid: message.guild.id,
+                                    fields: [{
+                                        val1: `Nouveau membre du groupe ${group.name}`,
+                                        val2: `<@${user.id}> est désormais dans le groupe ${group.name}`
+                                    }]
+                                }).getEmbed()]
+                            })
                         }
                     }
                        
@@ -105,25 +115,29 @@ const command : commandType = {
 
                     if(group){
                         if(!ugroup.includes(group.name)){
-                            message.channel.send(embed({
-                                name : "Erreur !",
-                                guildid : message.guild.id,
-                                fields : [{
-                                    val1 : `Une erreur est survenue`,
-                                    val2 : `<@${user.id}> n'est pas dans le groupe ${group.name}`
-                                }]
-                            }).getEmbed())
+                            message.channel.send({
+                                embeds: [embed({
+                                    name: "Erreur !",
+                                    guildid: message.guild.id,
+                                    fields: [{
+                                        val1: `Une erreur est survenue`,
+                                        val2: `<@${user.id}> n'est pas dans le groupe ${group.name}`
+                                    }]
+                                }).getEmbed()]
+                            })
                         }
                         else {
                             us.removeGroup(group.name)
-                            message.channel.send(embed({
-                                name : "Utilisateur retiré !",
-                                guildid : message.guild.id,
-                                fields : [{
-                                    val1 : `Un membre a quitté le ${group.name}`,
-                                    val2 : `<@${user.id}> n'est plus dans le groupe ${group.name}`
-                                }]
-                            }).getEmbed())
+                            message.channel.send({
+                                embeds: [embed({
+                                    name: "Utilisateur retiré !",
+                                    guildid: message.guild.id,
+                                    fields: [{
+                                        val1: `Un membre a quitté le ${group.name}`,
+                                        val2: `<@${user.id}> n'est plus dans le groupe ${group.name}`
+                                    }]
+                                }).getEmbed()]
+                            })
                         }
                     }
                        

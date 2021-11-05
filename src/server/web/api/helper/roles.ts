@@ -10,7 +10,7 @@ try{
                for(const [id_,guild] of req.user.guilds){
                    if(guild.permission.hasPermission("roles.see")){
                        const x = []
-                    for(const [id,role] of (await guild.Guild.roles.fetch()).cache.sort((r1,r2) => r2.position - r1.position)){
+                    for(const [id,role] of (await guild.Guild.roles.fetch()).sort((r1,r2) => r2.position - r1.position)){
                         x.push({
                             id,
                             name : role.name,
@@ -29,7 +29,7 @@ try{
                     const guild = req.user.guilds.get(req.query.type);
                     if(guild.permission.hasPermission("roles.see")){
                     const roles = [];
-                    for(const [id,role] of (await guild.Guild.roles.fetch()).cache.sort((r1,r2) => r2.position - r1.position)){
+                    for(const [id,role] of (await guild.Guild.roles.fetch()).sort((r1,r2) => r2.position - r1.position)){
                         roles.push({
                             id,
                             name : role.name,

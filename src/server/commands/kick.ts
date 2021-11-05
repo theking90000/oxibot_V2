@@ -31,21 +31,23 @@ const command: commandType = {
   },
   execute: async (message) => {
     if (!message.args[0] && message.userPerm.hasPermission("command.kick")) {
-      await message.channel.send(
-        embed({
-          name: message.lang.t("KickCommandEmbedDefaultTitle"),
-          guildid: message.guild.id,
-          fields: [
-            {
-              val1: message.lang.t("KickCommandEmbedDefaultKick", {
-                prefix: message.prefix,
-              }),
-              val2: message.lang.t("KickCommandEmbedDefaultKickDescription", {
-                permission: "command.kick.user",
-              }),
-            },
-          ],
-        }).getEmbed()
+      await message.channel.send({
+        embeds: [
+          embed({
+            name: message.lang.t("KickCommandEmbedDefaultTitle"),
+            guildid: message.guild.id,
+            fields: [
+              {
+                val1: message.lang.t("KickCommandEmbedDefaultKick", {
+                  prefix: message.prefix,
+                }),
+                val2: message.lang.t("KickCommandEmbedDefaultKickDescription", {
+                  permission: "command.kick.user",
+                }),
+              },
+            ],
+          }).getEmbed()]
+      }
       );
     }
 
@@ -53,7 +55,7 @@ const command: commandType = {
       message.args[0] &&
       message.userPerm.hasPermission("command.kick.user")
     ) {
-      const mentions = message.mentions.members.array();
+      const mentions = Array.from(message.mentions.members.values())
 
       const users: GuildMember[] = mentions;
       let raison = "",
@@ -83,17 +85,19 @@ const command: commandType = {
       }
 
       if (users.length < 1) {
-        await message.channel.send(
-          embed({
-            name: message.lang.t("CommandKickEmbedErrorTitle"),
-            guildid: message.guild.id,
-            fields: [
-              {
-                val1: message.lang.t("CommandKickEmbedError"),
-                val2: message.lang.t("CommandKickErrorNoMentions"),
-              },
-            ],
-          }).getEmbed()
+        await message.channel.send({
+          embeds: [
+            embed({
+              name: message.lang.t("CommandKickEmbedErrorTitle"),
+              guildid: message.guild.id,
+              fields: [
+                {
+                  val1: message.lang.t("CommandKickEmbedError"),
+                  val2: message.lang.t("CommandKickErrorNoMentions"),
+                },
+              ],
+            }).getEmbed()]
+        }
         );
         return;
       }
@@ -130,11 +134,13 @@ const command: commandType = {
             )),
           };
           if (dm)
-            user.send(
-              embed({
-                guildid: message.guild.id,
-                name: message.lang.t("KickDmEmbedTitle"),
-              }).getEmbed()
+            user.send({
+              embeds: [
+                embed({
+                  guildid: message.guild.id,
+                  name: message.lang.t("KickDmEmbedTitle"),
+                }).getEmbed()]
+            }
             );
           user.kick(`${user.user.tag} : ${raison}`);
         } else {
@@ -156,7 +162,7 @@ const command: commandType = {
       if (successmsg.val2 !== "") {
         ResumeEmbed.addFields([successmsg]);
       }
-      message.channel.send(ResumeEmbed.getEmbed());
+      message.channel.send({embeds :[ResumeEmbed.getEmbed()]});
       return;
     }
   },

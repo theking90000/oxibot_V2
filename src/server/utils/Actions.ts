@@ -185,7 +185,7 @@ export async function ExecuteAction(
                         message = message.replace(`{{${r.replace}}}`, r.value);
                       });
                     }
-                    (channel as TextChannel).send(message);
+                    (channel as unknown as TextChannel).send(message);
                   } catch {}
                 }
               }

@@ -133,7 +133,7 @@ const group_ = selectUser(guild.Guild.id, member_.id).getGroups().map((x) => x.n
           name: guild.Guild.name,
           owner: user.guilds.get(id).permission.hasPermission("panel.users.see")
             ? {
-                id: guild.Guild.owner.id,
+                id: guild.Guild.ownerId
               }
             : null,
           me: {

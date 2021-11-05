@@ -54,7 +54,7 @@ const command: commandType = {
                 return f;
               };
               em.addFields(genWarns(warns.warns));
-              const Emessage = await message.channel.send(em.getEmbed());
+              const Emessage = await message.channel.send({ embeds: [em.getEmbed()] });
               warns.warns.forEach((v, index) => {
                 Emessage.react(Emojis[index]);
               });
@@ -81,7 +81,7 @@ const command: commandType = {
                         user.id
                       ).warns;
                       em.addFields(genWarns(newW));
-                      Emessage.edit(em.getEmbed());
+                      Emessage.edit({ embeds: [em.getEmbed()] });
                       warns.warns.forEach((w, index) => {
                         if (
                           !Emessage.reactions.cache.find(
@@ -106,7 +106,7 @@ const command: commandType = {
         default: {
           if (message.args.length >= 1) {
             if (message.userPerm.hasPermission("command.warn.add")) {
-              const mentions = message.mentions.members.array();
+              const mentions = Array.from(message.mentions.members.values());
               const users: GuildMember[] = mentions || [];
               var raison = "";
               for (var i = 0; i < message.args.length; i++) {
@@ -129,17 +129,19 @@ const command: commandType = {
                 }
               }
               if (users.length < 1) {
-                await message.channel.send(
-                  embed({
-                    name: message.lang.t("EmbedErrorDefaultTitle"),
-                    guildid: message.guild.id,
-                    fields: [
-                      {
-                        val1: message.lang.t("WarnCommandEmbedErrorName"),
-                        val2: message.lang.t("WarnCommandErrorNoMention"),
-                      },
-                    ],
-                  }).getEmbed()
+                await message.channel.send({
+                  embeds: [
+                    embed({
+                      name: message.lang.t("EmbedErrorDefaultTitle"),
+                      guildid: message.guild.id,
+                      fields: [
+                        {
+                          val1: message.lang.t("WarnCommandEmbedErrorName"),
+                          val2: message.lang.t("WarnCommandErrorNoMention"),
+                        },
+                      ],
+                    }).getEmbed()]
+                }
                 );
                 return;
               }
@@ -197,51 +199,55 @@ const command: commandType = {
                 if (successmsg.val2 !== "") {
                   ResumeEmbed.addFields([successmsg]);
                 }
-                message.channel.send(ResumeEmbed.getEmbed());
+                message.channel.send({ embeds: [ResumeEmbed.getEmbed()] });
                 return;
               }
             }
           }
           if (message.userPerm.hasPermission("command.warn")) {
-            message.channel.send(
-              embed({
-                guildid: message.guild.id,
-                name: message.lang.t("WarnCommandEmbedDefaultTitle"),
-                description: message.lang.t("WarnCommandEmbedDescription"),
-                fields: [
-                  {
-                    val1: message.lang.t("WarnCommandEmbedWarn"),
-                    val2: message.lang.t("WarnCommandEmbedWarnDescription", {
-                      prefix: message.prefix,
-                      permission: "message.warn.add",
-                    }),
-                  },
-                  {
-                    val1: message.lang.t("WarnCommandEmbedList"),
-                    val2: message.lang.t("WarnCommandEmbedListDescription", {
-                      prefix: message.prefix,
-                      permission: "message.warn.list",
-                    }),
-                  },
-                ],
-              }).getEmbed()
+            message.channel.send({
+              embeds: [
+                embed({
+                  guildid: message.guild.id,
+                  name: message.lang.t("WarnCommandEmbedDefaultTitle"),
+                  description: message.lang.t("WarnCommandEmbedDescription"),
+                  fields: [
+                    {
+                      val1: message.lang.t("WarnCommandEmbedWarn"),
+                      val2: message.lang.t("WarnCommandEmbedWarnDescription", {
+                        prefix: message.prefix,
+                        permission: "message.warn.add",
+                      }),
+                    },
+                    {
+                      val1: message.lang.t("WarnCommandEmbedList"),
+                      val2: message.lang.t("WarnCommandEmbedListDescription", {
+                        prefix: message.prefix,
+                        permission: "message.warn.list",
+                      }),
+                    },
+                  ],
+                }).getEmbed()]
+            }
             );
           }
         }
       }
     } else {
       if (message.userPerm.hasPermission("command.warn")) {
-        message.channel.send(
-          embed({
-            guildid: message.guild.id,
-            name: message.lang.t("EmbedErrorDefaultTitle"),
-            fields: [
-              {
-                val1: message.lang.t("WarnCommandEmbedErrorName"),
-                val2: message.lang.t("WarnCommandErrorModuleDisabled"),
-              },
-            ],
-          }).getEmbed()
+        message.channel.send({
+          embeds: [
+            embed({
+              guildid: message.guild.id,
+              name: message.lang.t("EmbedErrorDefaultTitle"),
+              fields: [
+                {
+                  val1: message.lang.t("WarnCommandEmbedErrorName"),
+                  val2: message.lang.t("WarnCommandErrorModuleDisabled"),
+                },
+              ],
+            }).getEmbed()]
+        }
         );
       }
     }
